@@ -160,8 +160,9 @@ function mkTeam(id,f,other,sd){const c=club(id);let kit=c.color;
 function fillXI(t,sd){t.pl.forEach(p=>{p.on=0;p.s=-1});slots(t.f,sd).forEach((o,i)=>{const p=t.pl.find(q=>!q.on&&POS.indexOf(q.pos)==o.r)||t.pl.find(q=>!q.on&&q.pos!=POS[0]);if(p)Object.assign(p,{on:1,b:0,s:i,x:o.x,y:o.y})})}
 function place(sd,p){const t=S[sd],oth=t.pl.filter(q=>q.on&&q!==p);if(oth.length>=11)return 0;
  const used=new Set(oth.map(q=>q.s)),sl=slots(t.f,sd),r=POS.indexOf(p.pos);
- let i=sl.findIndex((o,k)=>!used.has(k)&&o.r==r);if(i<0)i=sl.findIndex((o,k)=>!used.has(k));if(i<0)return 0;
- Object.assign(p,{on:1,b:0,s:i,x:sl[i].x,y:sl[i].y});return 1}
+ /* a goalkeeper only takes the goalkeeper slot; others take the nearest free line to their position */
+ const c=sl.map((o,k)=>({o,k})).filter(({o,k})=>!used.has(k)&&(r==0?o.r==0:o.r>0)).sort((a,b)=>Math.abs(a.o.r-r)-Math.abs(b.o.r-r)||a.k-b.k)[0];if(!c)return 0;
+ Object.assign(p,{on:1,b:0,s:c.k,x:c.o.x,y:c.o.y});return 1}
 function refit(sd){const t=S[sd],a=t.pl.filter(q=>q.on).sort((x,y)=>POS.indexOf(x.pos)-POS.indexOf(y.pos));a.forEach(q=>q.on=0);a.forEach(q=>place(sd,q))}
 function autoXI(sd){const t=S[sd];t.pl.forEach(p=>{p.on=0;p.s=-1});
  slots(t.f,sd).forEach((o,i)=>{const p=t.pl.find(q=>!q.on&&POS.indexOf(q.pos)==o.r)||t.pl.find(q=>!q.on&&q.pos!=POS[0]);if(p)Object.assign(p,{on:1,s:i,x:o.x,y:o.y})})}
@@ -226,7 +227,7 @@ function renderInsp(){const p=selP(),e=$('#insp');
  if(!p){e.innerHTML='<h3>עריכת שחקן</h3><div class="hint">בחרו שחקן במגרש או ברשימה כדי לערוך שם, מספר ועמדה.</div>';return}
  e.innerHTML=`<h3>עריכת שחקן</h3><label>שם<input id="en" value="${esc(p.n)}"></label><div class="two"><label>מספר<input id="enum" inputmode="numeric" value="${esc(p.num)}"></label><label>עמדה<select id="epos">${opts(POS.map(x=>[x,x]),p.pos)}</select></label></div>
  <div class="two"><button id="eoff">${p.on?'החזר לסגל':'הוסף למגרש'}</button><button id="edel" class="dn">מחק שחקן</button></div>`}
-function renderSubs(){const n=x=>x.min+"׳";const li=S.subs.map(x=>`<div class="sub"><b>${n(x)}</b><span>${esc(club(S[x.sd].club).name)}: יוצא ${esc(x.out)} ← נכנס ${esc(x.inn)}</span></div>`).join('');
+function renderSubs(){const n=x=>x.min+"׳";const li=S.subs.map(x=>`<div class="sub"><b>${n(x)}</b><span>${esc(club(S[x.sd].club).name)}: יוצא ${esc(x.out)}${x.outNum?' ('+esc(x.outNum)+')':''} ← נכנס ${esc(x.inn)}${x.inNum?' ('+esc(x.inNum)+')':''}</span></div>`).join('');
  $('#subs').innerHTML='<h3>החלפות</h3>'+(li||'<div class="hint">בחרו שחקן על המגרש, הוסיפו שחקן לספסל ולחצו ״החלף״. הדקה נלקחת מהשעון.</div>')}
 function render(){renderBar();renderSB();renderPitch();renderTools();renderSide();renderInsp();renderSubs()}
 /* ---------- interactions ---------- */
@@ -246,9 +247,12 @@ $('#addp').onclick=()=>act(()=>{const p={id:uid(),n:'שחקן חדש',num:'',pos
 $('#list').onclick=e=>{const r=e.target.closest('.row');if(!r)return;const sd=S.tab,p=S[sd].pl.find(q=>q.id==r.dataset.id),a=e.target.closest('button')?.dataset.act;
  if(a=='off'){act(()=>{p.on=0;p.s=-1});return}
  if(a=='bench'){act(()=>{p.b=p.b?0:1});return}
- if(a=='sub'){const o=selP();if(o&&o.on&&S.sel.sd==sd){act(()=>{const min=Math.floor(clock.t/60);Object.assign(p,{on:1,b:0,s:o.s,x:o.x,y:o.y});Object.assign(o,{on:0,b:1,s:-1,x:0,y:0});S.subs.push({sd,out:o.n,inn:p.n,min});S.sel={sd,id:p.id}});toast('בוצעה החלפה')}return}
+ if(a=='sub'){const o=selP();if(o&&o.on&&S.sel.sd==sd){act(()=>{const min=Math.floor(clock.t/60);Object.assign(p,{on:1,b:0,s:o.s,x:o.x,y:o.y});Object.assign(o,{on:0,b:1,s:-1,x:0,y:0});S.subs.push({sd,out:o.n,inn:p.n,outNum:o.num,inNum:p.num,min});S.sel={sd,id:p.id}});toast('בוצעה החלפה')}return}
  if(a=='edit'||p.on){S.sel={sd,id:p.id};renderSide();renderInsp();renderPitch();return}
- act(()=>{if(place(sd,p))S.sel={sd,id:p.id};else toast('כבר יש 11 שחקנים על המגרש')})};
+ const full=S[sd].pl.filter(q=>q.on).length>=11,o=selP();
+ if(full&&o&&o.on&&S.sel.sd==sd){act(()=>{const min=Math.floor(clock.t/60);Object.assign(p,{on:1,b:0,s:o.s,x:o.x,y:o.y});Object.assign(o,{on:0,s:-1,x:0,y:0});S.subs.push({sd,out:o.n,inn:p.n,outNum:o.num,inNum:p.num,min});S.sel={sd,id:p.id}});toast('החלפת את '+o.n+' ב-'+p.n);return}
+ if(full){toast('יש 11 שחקנים. בחרו שחקן על המגרש ואז לחצו על שחקן מהסגל כדי להחליף');return}
+ act(()=>{if(place(sd,p))S.sel={sd,id:p.id};else toast('אין משבצת פנויה בעמדה הזו במערך')})};
 $('#insp').onchange=e=>{const p=selP();if(!p)return;
  act(()=>{if(e.target.id=='en')p.n=e.target.value.trim()||p.n;
   if(e.target.id=='enum'){p.num=e.target.value.replace(/\D/g,'').slice(0,3);if(p.num&&S[S.sel.sd].pl.some(q=>q!==p&&q.num==p.num))toast('מספר '+p.num+' כבר קיים בקבוצה')}
