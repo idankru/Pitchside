@@ -154,9 +154,10 @@ const dist=(a,b)=>{const x=parseInt(a.slice(1),16),y=parseInt(b.slice(1),16);ret
 function slots(f,sd){const L=f.split('-').map(Number),o=[{r:0,x:75,y:325}];
  L.forEach((c,i)=>{const x=L.length>1?170+i*260/(L.length-1):300;for(let j=0;j<c;j++)o.push({r:i==0?1:i==L.length-1?3:2,x,y:20+610*(j+1)/(c+1)})});
  return o.map(s=>({r:s.r,x:sd=='home'?s.x:1000-s.x,y:s.y}))}
-function mkTeam(id,f,other){const c=club(id);let kit=c.color;
+function mkTeam(id,f,other,sd){const c=club(id);let kit=c.color;
  if(other&&dist(kit,other)<90)kit=lum(kit)>.5?'#1c2733':'#f5f5f5';
- return{club:id,f,kit,pl:squad(id).map(p=>({id:uid(),n:p.n,num:p.num||'',pos:cp(p.pos),on:0,s:-1,x:0,y:0}))}}
+ const t={club:id,f,kit,pl:squad(id).map(p=>({id:uid(),n:p.n,num:p.num||'',pos:cp(p.pos),on:0,s:-1,x:0,y:0}))};if(sd)fillXI(t,sd);return t}
+function fillXI(t,sd){t.pl.forEach(p=>{p.on=0;p.s=-1});slots(t.f,sd).forEach((o,i)=>{const p=t.pl.find(q=>!q.on&&POS.indexOf(q.pos)==o.r)||t.pl.find(q=>!q.on&&q.pos!=POS[0]);if(p)Object.assign(p,{on:1,b:0,s:i,x:o.x,y:o.y})})}
 function place(sd,p){const t=S[sd],oth=t.pl.filter(q=>q.on&&q!==p);if(oth.length>=11)return 0;
  const used=new Set(oth.map(q=>q.s)),sl=slots(t.f,sd),r=POS.indexOf(p.pos);
  let i=sl.findIndex((o,k)=>!used.has(k)&&o.r==r);if(i<0)i=sl.findIndex((o,k)=>!used.has(k));if(i<0)return 0;
@@ -229,11 +230,11 @@ function renderSubs(){const n=x=>x.min+"׳";const li=S.subs.map(x=>`<div class="
  $('#subs').innerHTML='<h3>החלפות</h3>'+(li||'<div class="hint">בחרו שחקן על המגרש, הוסיפו שחקן לספסל ולחצו ״החלף״. הדקה נלקחת מהשעון.</div>')}
 function render(){renderBar();renderSB();renderPitch();renderTools();renderSide();renderInsp();renderSubs()}
 /* ---------- interactions ---------- */
-$('#league').onchange=e=>act(()=>{S.subs=[];S.draw=[];S.league=e.target.value;const cs=CLUBS.filter(c=>c.lg==S.league);S.home=mkTeam(cs[0].id,S.home.f);S.away=mkTeam(cs[1].id,S.away.f,S.home.kit);S.sel=null});
+$('#league').onchange=e=>act(()=>{S.subs=[];S.draw=[];S.league=e.target.value;const cs=CLUBS.filter(c=>c.lg==S.league);S.home=mkTeam(cs[0].id,S.home.f,null,'home');S.away=mkTeam(cs[1].id,S.away.f,S.home.kit,'away');S.sel=null});
 for(const sd of['home','away']){
  $('#'+sd).onchange=e=>act(()=>{let id=e.target.value;const o=sd=='home'?'away':'home';
   if(id==S[o].club){toast('בחרו שתי קבוצות שונות');return}
-  S[sd]=mkTeam(id,S[sd].f,sd=='away'?S.home.kit:null);S.sel=null;S.subs=[]});
+  S[sd]=mkTeam(id,S[sd].f,sd=='away'?S.home.kit:null,sd);S.sel=null;S.subs=[]});
  $('#'+sd[0]+'f').onchange=e=>act(()=>{S[sd].f=e.target.value;refit(sd)})}
 $('#reset').onclick=()=>act(()=>{refit('home');refit('away')});
 $('#tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b){S.tab=b.dataset.tab;renderSide()}};
@@ -328,7 +329,7 @@ function importRecords(rs){const g={};let n=0;
  for(const r of rs){const nm=String(r.team||r.club||r.קבוצה||'').trim(),pn=String(r.name||r.player||r.שחקן||'').trim();if(!nm||!pn)continue;
   const c=CLUBS.find(c=>c.name==nm||c.id==nm);if(!c)continue;(g[c.id]=g[c.id]||[]).push({n:pn,num:String(r.number??r.מספר??'').replace(/\D/g,'').slice(0,3),pos:cp(r.position||r.עמדה)});n++}
  const ids=Object.keys(g);if(!ids.length)throw Error('לא זוהתה אף קבוצה. שם הקבוצה חייב להיות זהה לשם ברשימה.');
- act(()=>{ids.forEach(id=>DB[id]=g[id]);saveDB();for(const sd of['home','away'])if(g[S[sd].club])S[sd]=mkTeam(S[sd].club,S[sd].f,null);S.sel=null});
+ act(()=>{ids.forEach(id=>DB[id]=g[id]);saveDB();for(const sd of['home','away'])if(g[S[sd].club])S[sd]=mkTeam(S[sd].club,S[sd].f,null,sd);S.sel=null});
  return`יובאו ${n} שחקנים ל־${ids.length} קבוצות`}
 function convertOld(t){const c=CLUBS.find(c=>c.name==t.name)||CLUBS[0];return{club:c.id,f:FORMS.includes(t.formation)?t.formation:'4-3-3',kit:t.color||c.color,pl:t.players.map(p=>({id:uid(),n:p.name,num:p.number||'',pos:cp(p.position),on:p.active?1:0,s:-1,x:(p.x||50)*10,y:(p.y||50)*6.5}))}}
 function doImport(txt){txt=txt.trim();if(!txt)throw Error('התיבה ריקה');
@@ -345,7 +346,7 @@ $('#fi').onchange=async e=>{const f=e.target.files[0];if(f){io.value=await f.tex
 /* ---------- boot ---------- */
 try{const th=localStorage.getItem('fts.theme');if(th)document.documentElement.dataset.theme=th}catch(e){}
 try{const o=JSON.parse(localStorage.getItem('fts.v3')||'null');if(o&&o.home&&o.away&&o.home.pl)restore(JSON.stringify(o))}catch(e){}
-if(!S.home){S.home=mkTeam('mta','4-3-3');S.away=mkTeam('mha','4-3-3',S.home.kit)}
+if(!S.home){S.home=mkTeam('mta','4-3-3',null,'home');S.away=mkTeam('mha','4-3-3',S.home.kit,'away')}
 render();renderSaved();
 /* ---------- live sharing: the owner broadcasts, everyone else watches ---------- */
 const live={doc:null,ed:false,busy:0,pend:0,tm:null};
