@@ -68,6 +68,14 @@ dialog::backdrop{background:#0008}dialog textarea{height:180px;font-family:monos
 .live{display:inline-block;margin-bottom:10px;padding:5px 12px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);font-size:12px;font-weight:700}
 body.ro .bar,body.ro .dtools,body.ro .ctl,body.ro #insp,body.ro #saved,body.ro #addp,body.ro .krow,body.ro #undo,body.ro #redo{display:none}
 body.ro #pitch,body.ro #list,body.ro .gl{pointer-events:none}
+/* live data sync */
+.per{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);font-size:12px;font-weight:700;color:var(--mu)}
+.synst{font-size:12px;color:var(--mu);margin-top:6px;min-height:1em}
+#sdlg label{display:block;font-size:12px;color:var(--mu);margin-top:8px}
+#sdlg ol{margin:8px 0;padding-inline-start:20px;font-size:13px;line-height:1.6}
+#sdlg .st{margin-top:10px;font-size:13px;font-weight:700}
+body.ro .synst{display:none}
+.live[hidden]{display:none}
 @media(max-width:960px){.app{grid-template-columns:1fr}}
 @media(max-width:520px){.sb .crest{width:52px;height:52px}.score{font-size:24px}}
 </style></head><body>
@@ -101,6 +109,15 @@ body.ro #pitch,body.ro #list,body.ro .gl{pointer-events:none}
 <textarea id="io" placeholder="כאן יופיע הייצוא, או הדביקו JSON / CSV (league,team,name,number,position) לייבוא"></textarea>
 <div class="dr"><button id="xs">ייצוא מצב</button><button id="xc">ייצוא סגלים CSV</button><button id="xp">תמונת מגרש</button><button id="cp">העתק</button><button id="im" class="pr">ייבא מהתיבה</button><button id="xf">בחר קובץ…</button><button id="cl" style="margin-inline-start:auto">סגור</button></div>
 <input type="file" id="fi" accept=".json,.csv,.txt" hidden><div id="imgbox"></div></dialog>
+<dialog id="sdlg"><h3>סנכרון אוטומטי של זמן ותוצאה</h3>
+<div class="hint">השעון, התוצאה ושלב המשחק יימשכו מהשירות API-Football לפי שתי הקבוצות שבחרתם בלוח. הצופים בשידור החי יקבלו את העדכונים אוטומטית.</div>
+<ol><li>נרשמים בחינם ב-dashboard.api-football.com/register</li><li>אחרי אישור המייל: Account ← My Access, ומעתיקים את המפתח</li><li>מדביקים אותו כאן ומפעילים כ-10 דקות לפני שריקת הפתיחה</li></ol>
+<label>מפתח API (נשמר רק במכשיר הזה)<input id="skey" type="password" autocomplete="off" spellcheck="false"></label>
+<div class="two"><label>בדיקה כל<select id="sint"><option value="60">60 שניות</option><option value="90">90 שניות (מומלץ)</option><option value="120">120 שניות</option></select></label>
+<label>מספר משחק – לא חובה<input id="sfix" inputmode="numeric" placeholder="Fixture ID"></label></div>
+<div class="st" id="sstat" role="status"></div>
+<div class="hint">התוכנית החינמית: 100 בדיקות ביום. בבדיקה כל 90 שניות משחק שלם צורך בערך 80. אחרי שריקת הסיום הבדיקות נעצרות לבד. בזמן סנכרון, שינוי ידני של התוצאה או השעון יוחלף בבדיקה הבאה.</div>
+<div class="dr"><button id="son" class="pr">הפעל סנכרון</button><button id="soff">כבה סנכרון</button><button id="scl" style="margin-inline-start:auto">סגור</button></div></dialog>
 <script>
 'use strict';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -170,6 +187,9 @@ function autoXI(sd){const t=S[sd];t.pl.forEach(p=>{p.on=0;p.s=-1});
 let S={league:'premier',home:null,away:null,sb:{h:0,a:0},draw:[],subs:[],tool:'move',dcol:'#ffd84a',tab:'home',sel:null};
 const snap=()=>JSON.stringify({league:S.league,home:S.home,away:S.away,sb:S.sb,draw:S.draw,subs:S.subs});
 let hist=[],redo=[],clock={t:0,run:0,iv:null};
+const sync={on:false,key:'',iv:90,fix:'',fixture:null,status:'',tm:null,err:'',at:0,done:false,names:''};
+try{Object.assign(sync,JSON.parse(localStorage.getItem('fts.sync')||'{}'),{fixture:null,status:'',tm:null,err:'',at:0,done:false})}catch(e){}
+
 function restore(s){const o=JSON.parse(s);S.league=o.league;S.home=o.home;S.away=o.away;S.sb=o.sb;S.draw=o.draw||[];S.subs=o.subs||[];S.sel=null}
 function save(){try{localStorage.setItem('fts.v3',snap())}catch(e){}}
 function commit(){save();render();pushLive()}
@@ -193,10 +213,10 @@ function renderSB(){const h=club(S.home.club),a=club(S.away.club),ex=S.sb.ex||0,
  $('#sb').innerHTML=`<div class="sbt">${esc(h.name)} נגד ${esc(a.name)}</div>
  <div class="sbs"><span>${lg},</span><input id="rnd" value="${esc(S.sb.round||'')}" placeholder="מחזור" aria-label="מחזור"></div>
  <div class="sbg"><div class="tm">${crestOf(h,S.home)}<span>${esc(h.name)}</span>${gl('h')}</div>
- <div class="mid"><div class="pill"><span class="clk" id="clk">${fmt(clock.t)}</span>${ex?`<span class="ex">+${ex}</span>`:''}</div><div class="score"><span>${S.sb.h}</span>-<span>${S.sb.a}</span></div></div>
+ <div class="mid"><div class="pill"><span class="clk" id="clk">${fmt(clock.t)}</span>${ex?`<span class="ex">+${ex}</span>`:''}</div><div class="score"><span>${S.sb.h}</span>-<span>${S.sb.a}</span></div>${S.sb.per?`<div class="per">${esc(S.sb.per)}</div>`:''}</div>
  <div class="tm aw">${crestOf(a,S.away)}<span>${esc(a.name)}</span>${gl('a')}</div></div>
- <div class="ctl"><button data-ck="play">${clock.run?'⏸ עצור':'▶ התחל'}</button><button data-mn="-1">דקה −</button><button data-mn="1">דקה ＋</button><button data-mn="10">＋10 דק׳</button><button data-ck="reset">איפוס שעון</button>
- <label class="exl">תוספת זמן (דק׳)<input id="exin" type="number" inputmode="numeric" min="0" max="30" value="${ex||''}" placeholder="0"></label></div>`}
+ <div class="ctl"><button data-ck="play">${clock.run?'⏸ עצור':'▶ התחל'}</button><button data-mn="-1">דקה −</button><button data-mn="1">דקה ＋</button><button data-mn="10">＋10 דק׳</button><button data-ck="reset">איפוס שעון</button><button data-ck="sync">${sync.on?'🟢 סנכרון פעיל':'🌐 סנכרון אוטומטי'}</button>
+ <label class="exl">תוספת זמן (דק׳)<input id="exin" type="number" inputmode="numeric" min="0" max="30" value="${ex||''}" placeholder="0"></label></div><div class="synst" id="synst">${esc(syncLine())}</div>`}
 function shirt(sd,p){const t=S[sd],ink=lum(t.kit)>.55?'#14212f':'#fff',w=Math.max(54,[...p.n].length*7.4+14),sel=S.sel&&S.sel.id==p.id;
  return`<g class="pl" data-s="${sd}" data-id="${p.id}" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})" style="cursor:grab">${sel?'<circle r="34" fill="none" stroke="#ffd84a" stroke-width="3.5"/>':''}
  <polygon transform="scale(1.35)" points="-9,-20 -4,-22 4,-22 9,-20 20,-12 16,-3 11,-6 11,20 -11,20 -11,-6 -16,-3 -20,-12" fill="${t.kit}" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
@@ -266,6 +286,7 @@ $('#sb').onclick=e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.ex){act(()=>{S.sb.ex=Math.max(0,(S.sb.ex||0)+ +b.dataset.ex)});return}
  if(b.dataset.sc){const k=b.dataset.sc[0],d=+b.dataset.sc.slice(1);act(()=>{S.sb[k]=Math.max(0,S.sb[k]+d)})}
  if(b.dataset.ck=='play'){clock.run=!clock.run;clearInterval(clock.iv);if(clock.run)clock.iv=setInterval(()=>{clock.t++;$('#clk').textContent=fmt(clock.t)},1000);renderSB();pushLive()}
+ if(b.dataset.ck=='sync'){openSync();return}
  if(b.dataset.ck=='reset'){clock.t=0;clock.run=0;clearInterval(clock.iv);renderSB();pushLive()}};
 /* drag on pitch */
 const pitch=$('#pitch');let drag=null;
@@ -366,4 +387,60 @@ function applyLive(d){if(!d||!d.snap)return;try{restore(d.snap)}catch(e){return}
  if(live.ed){b.textContent='● משדר: כל שינוי שתעשו מופיע אצל הצופים בזמן אמת'}
  else{document.body.classList.add('ro');b.textContent='● שידור חי: צפייה בלבד';live.doc.onSnapshot(sn=>{if(sn.exists)applyLive(sn.data())},()=>{b.textContent='● השידור לא זמין כרגע'})}
 }catch(e){}})();
+
+/* ---------- live data sync (API-Football) ---------- */
+/* keywords that identify each club in the service's English team names; "a|b" = either spelling */
+const KW={mta:['maccabi','tel aviv'],mha:['maccabi','haifa'],hta:['hapoel','tel aviv'],hbs:['sheva'],beitar:['beitar|betar'],sakhnin:['sakhnin'],netanya:['netanya'],mpt:['maccabi','petah|petach'],hha:['hapoel','haifa'],hjr:['hapoel','jerusalem'],hrg:['ramat gan'],hpt:['hapoel','petah|petach'],ksh:['shmona'],tiberias:['tiberias|tveria'],
+ jaffa:['jaffa|yafo'],kfar:['kfar saba'],ashdod:['ashdod'],'bnei-yehuda':['yehuda'],'kfar-shalem':['shalem'],rishon:['rishon'],raanana:['raanana'],'kiryat-yam':['kiryat yam'],afula:['afula'],reineh:['reineh|reine'],qasem:['qasem|qasim|kasem|kassem'],'kiryat-gat':['gat'],nazareth:['nazareth|nazrat|nazareth'],modiin:['modiin'],herzliya:['herzliya|herzliyya'],akko:['akko|acre|ako']};
+const norm=s=>' '+String(s||'').toLowerCase().replace(/['’`]/g,'').replace(/[^a-z0-9]+/g,' ').trim()+' ';
+function isClub(id,name){const k=KW[id];if(!k)return false;const n=norm(name);return k.every(w=>w.split('|').some(x=>n.includes(' '+x)))}
+const PER={NS:'לפני המשחק','1H':'מחצית 1',HT:'הפסקה','2H':'מחצית 2',ET:'הארכה',BT:'הפסקה',P:'פנדלים',FT:'סיום',AET:'סיום',PEN:'סיום',SUSP:'הופסק',INT:'הופסק',PST:'נדחה',CANC:'בוטל',ABD:'ננטש',AWD:'סיום',WO:'סיום',LIVE:'חי'};
+const RUN=['1H','2H','ET','LIVE'],FIN=['FT','AET','PEN','PST','CANC','ABD','AWD','WO'];
+function saveSync(){try{localStorage.setItem('fts.sync',JSON.stringify({on:sync.on,key:sync.key,iv:sync.iv,fix:sync.fix}))}catch(e){}}
+function syncLine(){if(!sync.on)return '';if(sync.err)return (sync.fixture?'🟠 ':'⏳ ')+sync.err;
+ if(!sync.fixture)return '⏳ מחפש את המשחק…';const ago=Math.round((Date.now()-sync.at)/1000);
+ return '🟢 מסונכרן · '+sync.names+' · עודכן לפני '+ago+' שנ׳'+(sync.done?' · המשחק הסתיים':'')}
+function showSync(){const e=$('#synst');if(e)e.textContent=syncLine();const s=$('#sstat');if(s)s.textContent=sync.on?syncLine():'הסנכרון כבוי'}
+setInterval(()=>{if(sync.on)showSync()},1000);
+function setClock(sec,run){clearInterval(clock.iv);clock.t=Math.max(0,Math.floor(sec));clock.run=run?1:0;
+ if(clock.run)clock.iv=setInterval(()=>{clock.t++;const e=$('#clk');if(e)e.textContent=fmt(clock.t)},1000)}
+function apiErr(j){const e=j&&j.errors;if(!e||(Array.isArray(e)&&!e.length)||(typeof e=='object'&&!Object.keys(e).length))return '';
+ if(e.token)return 'מפתח API שגוי';if(e.requests)return 'נגמרה מכסת הבדיקות להיום';if(e.rateLimit)return 'יותר מדי בדיקות בדקה';return String(Object.values(e)[0]||'שגיאה מהשירות')}
+function applyFixture(f){const st=f.fixture.status||{},code=st.short||'';
+ const sec=Math.max(0,(st.elapsed||0)+(st.extra||0)-1)*60;   /* "elapsed" = current minute */
+ const first=!sync.fixture;sync.fixture=f.fixture.id;
+ const flip=!isClub(S.home.club,f.teams.home.name)&&isClub(S.home.club,f.teams.away.name);
+ const gh=(f.goals&&f.goals.home)||0,ga=(f.goals&&f.goals.away)||0,h=flip?ga:gh,a=flip?gh:ga;
+ sync.names=flip?f.teams.away.name+' – '+f.teams.home.name:f.teams.home.name+' – '+f.teams.away.name;
+ let clockChanged=false;
+ if(RUN.includes(code)){const slack=120+sync.iv;
+  if(code!==sync.status){setClock(Math.max(sec,code=='2H'?2700:code=='ET'?5400:0),1);clockChanged=true}
+  else if(!clock.run||clock.t<sec||clock.t>sec+slack){setClock(sec+30,1);clockChanged=true}}
+ else{const t=code=='HT'?2700:code=='FT'?Math.max(clock.t,5400):code=='NS'?0:Math.max(clock.t,sec);if(clock.run||clock.t!==t){setClock(t,0);clockChanged=true}}
+ sync.status=code;sync.done=FIN.includes(code);sync.err='';sync.at=Date.now();
+ const per=PER[code]||'',m=/(\d+)\s*$/.exec((f.league&&f.league.round)||'');
+ if(S.sb.h!==h||S.sb.a!==a||S.sb.per!==per||(first&&m&&!S.sb.round)){
+  if(S.sb.h!==h||S.sb.a!==a)hist.push(snap());   /* score changes stay undoable */
+  S.sb.h=h;S.sb.a=a;S.sb.per=per;if(first&&m&&!S.sb.round)S.sb.round='מחזור '+m[1];commit()}
+ else if(clockChanged){renderSB();pushLive()}}
+async function pollSync(){clearTimeout(sync.tm);sync.tm=null;if(!sync.on||!sync.key)return;
+ const id=sync.fixture||(/^\d+$/.test(sync.fix)?sync.fix:null);
+ try{const r=await fetch('https://v3.football.api-sports.io/'+(id?'fixtures?id='+id:'fixtures?live=all'),{headers:{'x-apisports-key':sync.key},cache:'no-store'});
+  const j=await r.json(),err=apiErr(j);
+  if(err)sync.err=err;
+  else{const L=j.response||[];
+   const f=id?(L.find(x=>String(x.fixture.id)==String(id))||null):(L.find(x=>[x.teams.home.name,x.teams.away.name].some(n=>isClub(S.home.club,n))&&[x.teams.home.name,x.teams.away.name].some(n=>isClub(S.away.club,n)))
+                  ||L.find(x=>[x.teams.home.name,x.teams.away.name].some(n=>isClub(S.home.club,n))));
+   if(f)applyFixture(f);else sync.err=id?'המשחק לא נמצא – בדקו את המספר':'ממתין למשחק חי של '+club(S.home.club).name}}
+ catch(e){sync.err='אין חיבור לשירות'+(location.hostname.endsWith('claude.ai')||location.protocol=='blob:'?' – בתוך claude.ai זה חסום, פתחו את האתר שלכם':'')}
+ showSync();if(sync.on&&!sync.done)sync.tm=setTimeout(pollSync,Math.max(30,sync.iv)*1000)}
+function startSync(){sync.on=true;sync.fixture=null;sync.status='';sync.err='';sync.done=false;saveSync();renderSB();showSync();pollSync()}
+function stopSync(){sync.on=false;clearTimeout(sync.tm);sync.tm=null;saveSync();renderSB();showSync()}
+function openSync(){$('#skey').value=sync.key||'';$('#sint').value=String(sync.iv||90);$('#sfix').value=sync.fix||'';showSync();$('#sdlg').showModal()}
+$('#son').onclick=()=>{sync.key=$('#skey').value.trim();sync.iv=+$('#sint').value||90;sync.fix=$('#sfix').value.trim();
+ if(!sync.key){$('#sstat').textContent='הדביקו קודם את מפתח ה-API';return}startSync()};
+$('#soff').onclick=stopSync;$('#scl').onclick=()=>$('#sdlg').close();
+/* changing a team restarts the search for the right match */
+['#home','#away','#league'].forEach(s=>$(s).addEventListener('change',()=>{if(sync.on)setTimeout(startSync,0)}));
+if(sync.on&&sync.key&&!document.body.classList.contains('ro'))setTimeout(()=>{if(!document.body.classList.contains('ro'))startSync()},1500);
 </script></body></html>
