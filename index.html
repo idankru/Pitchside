@@ -76,12 +76,74 @@ body.ro #pitch,body.ro #list,body.ro .gl{pointer-events:none}
 #sdlg .st{margin-top:10px;font-size:13px;font-weight:700}
 body.ro .synst{display:none}
 .live[hidden]{display:none}
+/* ---------- views nav ---------- */
+[hidden]{display:none!important}
+.views{display:flex;gap:4px;background:var(--s2);border:1px solid var(--bd);border-radius:11px;padding:3px}
+.views button{border:0;background:transparent;padding:7px 14px;border-radius:8px}
+.views button[aria-current=page]{background:var(--ac);color:var(--ax)}
+body.ro .views{display:none}
+@media(max-width:640px){header{flex-wrap:wrap}.views{order:3;width:100%}.views button{flex:1}}
+/* ---------- lineup builder ---------- */
+#lb{max-width:1500px;margin:auto;padding:16px}
+.lbtop{display:flex;flex-wrap:wrap;gap:10px;align-items:end;background:var(--s);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:14px}
+.lbtop label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu);flex:1;min-width:130px}
+.lbtop .acts{display:flex;gap:6px;flex-wrap:wrap}
+.lbg{display:grid;grid-template-columns:300px minmax(0,1fr) 350px;gap:14px;align-items:start}
+@media(max-width:1250px){.lbg{grid-template-columns:minmax(0,1fr) 340px}.lbg .lbroster{grid-column:2;grid-row:1/span 2}.lbg .lbmid{grid-column:1;grid-row:1}.lbg .lbside{grid-column:1/-1}}
+@media(max-width:860px){.lbg{grid-template-columns:minmax(0,1fr)}.lbg .lbroster,.lbg .lbmid,.lbg .lbside{grid-column:1;grid-row:auto}.lbg .lbmid{order:-1}}
+.lbmid{min-width:0}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--s)}
+.seg button{border:0;border-radius:0;background:transparent;font-weight:600;padding:7px 12px}
+.seg button[aria-pressed=true]{background:var(--ac);color:var(--ax);font-weight:800}
+.lbbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lbpw{border-radius:14px;overflow:hidden;border:1px solid var(--bd);background:#1f7a5a;max-width:620px;margin:0 auto}
+#lbpitch{display:block;width:100%;height:auto;touch-action:none;user-select:none;direction:ltr}
+#lbpitch .tok{cursor:grab}#lbpitch .tok:focus{outline:none}
+.lbsum{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.chipx{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);font-size:12px;font-weight:700}
+.chipx.ok{border-color:var(--ac)}.chipx.warn{border-color:#e0a100}.chipx.bad{border-color:var(--dn);color:var(--dn)}
+/* roster */
+.lbroster .flt{grid-template-columns:1fr 104px}
+.rl{display:flex;flex-direction:column;gap:5px;max-height:560px;overflow:auto}
+.rr{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:6px 8px}
+.rr.inxi{border-color:var(--ac)}.rr.unav{opacity:.62}
+.rr .nm{min-width:0;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.rr .nm small{display:block;color:var(--mu);font-weight:400;font-size:11px}
+.rr .bt{display:flex;gap:4px}.rr .bt button{padding:4px 7px;font-size:12px}
+.tag{font-size:11px;font-weight:800;padding:2px 7px;border-radius:99px;background:var(--ac);color:var(--ax);white-space:nowrap}
+.tag.b{background:var(--s);color:var(--tx);border:1px solid var(--bd)}
+/* side cards */
+.lbside{display:flex;flex-direction:column;gap:12px;min-width:0}
+details.card{margin:0}
+details.card>summary{cursor:pointer;font-weight:800;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:'▾';color:var(--mu)}
+details.card:not([open])>summary::after{content:'◂'}
+details.card[open]>summary{margin-bottom:10px}
+.fl{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu);margin-top:8px}
+.fl:first-of-type{margin-top:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tacrow{display:grid;grid-template-columns:92px minmax(0,1fr);gap:8px;align-items:center;margin-top:8px;font-size:13px}
+.tacrow .seg{width:100%}.tacrow .seg button{flex:1;padding:6px 4px;font-size:12px}
+textarea.nt{min-height:90px;resize:vertical;font:inherit;font-size:13px}
+.bl{display:flex;flex-direction:column;gap:5px}
+.bi{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:6px;align-items:center;font-size:13px;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:4px 6px}
+.bi b{color:var(--mu);text-align:center}.bi .bt{display:flex;gap:3px}.bi .bt button{padding:2px 7px;font-size:12px}
+.ck{display:flex;gap:8px;align-items:flex-start;font-size:13px;padding:5px 0;border-bottom:1px solid var(--bd)}.ck:last-child{border:0}
+.ck i{font-style:normal;flex:none;width:20px;text-align:center}
+.svl .sv{cursor:default}
+#lbinsp .who{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+#lbinsp .rolebtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#lbinsp .rolebtns button.on{background:#f0b429;color:#14212f;border-color:#f0b429}
+#lbimgdlg img{width:100%;border-radius:10px;border:1px solid var(--bd)}
+#lbpdlg label{display:block;font-size:12px;color:var(--mu);margin-top:8px}
 @media(max-width:960px){.app{grid-template-columns:1fr}}
 @media(max-width:520px){.sb .crest{width:52px;height:52px}.score{font-size:24px}}
 </style></head><body>
 <header><h1>⚽ סטודיו טקטיקה</h1>
+<nav class="views" aria-label="דפים"><button data-view="game" aria-current="page">יום משחק</button><button data-view="lineup">בניית הרכב</button></nav>
 <div class="hb"><button id="undo" title="Ctrl+Z" aria-label="בטל">↶</button><button id="redo" title="Ctrl+Y" aria-label="חזור">↷</button><button id="theme" aria-label="ערכת צבעים">◐</button><button id="data" class="pr">נתונים וייצוא</button></div></header>
-<main>
+<main id="game">
 <div id="live" class="live" hidden></div>
 <section class="bar">
 <label>ליגה<select id="league"><option value="premier">ליגת העל</option><option value="national">הליגה הלאומית</option></select></label>
@@ -104,6 +166,66 @@ body.ro .synst{display:none}
 <div class="card" id="subs"></div>
 <div class="card" id="saved"></div>
 </aside></div></main>
+<main id="lb" hidden>
+<section class="lbtop" aria-label="קבוצה ומערך">
+<label>ליגה<select id="lbleague"><option value="premier">ליגת העל</option><option value="national">הליגה הלאומית</option></select></label>
+<label>הקבוצה שלי<select id="lbclub"></select></label>
+<label>מערך<select id="lbform"></select></label>
+<div class="acts"><button id="lbauto">הרכב אוטומטי</button><button id="lbclear">נקה הרכב</button><button id="lbreload" title="טוען מחדש את הסגל של הקבוצה">סגל מחדש</button></div>
+</section>
+<div class="lbg">
+<aside class="lbroster"><div class="card">
+<h3 id="lbrh">הסגל</h3>
+<div class="flt"><input id="lbq" placeholder="חיפוש שם או מספר" aria-label="חיפוש שחקן"><select id="lbpf" aria-label="סינון לפי עמדה"></select></div>
+<div class="rl" id="lbrl"></div>
+<button id="lbaddp" style="width:100%;margin-top:8px">＋ הוסף שחקן</button>
+</div></aside>
+<section class="lbmid">
+<div class="lbbar">
+<div class="seg" id="lbphase" role="group" aria-label="צורת המערך"><button data-ph="def">🛡 בהגנה</button><button data-ph="att">⚔ בהתקפה</button></div>
+<div class="dtools" id="lbtools" style="margin:0"></div>
+</div>
+<div class="lbpw"><svg id="lbpitch" viewBox="0 0 680 1050" role="img" aria-label="מגרש – ההרכב שלי"></svg></div>
+<p class="hint">לחצו על עמדה במגרש ואז על שחקן בסגל כדי להציב אותו · גררו שחקן על שחקן אחר להחלפה, או למקום ריק כדי לכוונן מיקום · "בהגנה / בהתקפה" שומרים מיקומים נפרדים</p>
+<div class="lbsum" id="lbsum"></div>
+<div class="card" id="lbinsp" style="margin-top:12px"></div>
+</section>
+<aside class="lbside">
+<details class="card" open><summary>ספסל <span class="tag b" id="lbbc"></span></summary>
+<div class="bl" id="lbbench"></div>
+<label class="fl">מספר מחליפים מקסימלי<select id="lbbmax"></select></label>
+</details>
+<details class="card" open><summary>קפטן ומצבים נייחים</summary><div id="lbsp"></div></details>
+<details class="card"><summary>טקטיקה והוראות</summary><div id="lbtac"></div>
+<label class="fl">הנחיות לקבוצה<textarea class="nt" id="lbnotes" placeholder="למשל: לחץ גבוה ב-15 הדקות הראשונות, לצאת מהר בכדורים שנחטפים, המגן השמאלי נשאר מאחור"></textarea></label>
+</details>
+<details class="card"><summary>פרטי המשחק ומדים</summary>
+<label class="fl">כותרת<input id="lbtitle" placeholder="למשל: הרכב פותח – מחזור 11"></label>
+<div class="grid2"><label class="fl">תאריך<input id="lbdate" type="date"></label><label class="fl">שעה<input id="lbtime" type="time"></label></div>
+<div class="grid2"><label class="fl">מסגרת<input id="lbcomp" placeholder="ליגה / גביע / ידידות"></label><label class="fl">מגרש<input id="lbvenue" placeholder="בית / חוץ / שם האצטדיון"></label></div>
+<label class="fl">יריב (לא חובה)<input id="lbopp" placeholder="השאירו ריק אם לא רלוונטי"></label>
+<div class="grid2"><label class="fl">צבע חולצה<input type="color" id="lbkit"></label><label class="fl">צבע שוער<input type="color" id="lbgk"></label></div>
+<label class="fl">שם על המגרש<select id="lbname"><option value="last">שם משפחה</option><option value="full">שם מלא</option><option value="none">בלי שם</option></select></label>
+<label class="check" style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:13px"><input type="checkbox" id="lbcode" style="width:auto"> הצג קיצור עמדה מעל כל שחקן</label>
+</details>
+<details class="card" open><summary>בדיקת הרכב <span class="tag b" id="lbcc"></span></summary><div id="lbchk"></div></details>
+<details class="card" open><summary>שמירה ושיתוף</summary>
+<div class="grid2" style="margin-bottom:8px"><button id="lbimg" class="pr">🖼 תמונת הרכב</button><button id="lbtext">📋 העתק כטקסט</button></div>
+<div style="display:flex;gap:6px"><input id="lbsvname" placeholder="שם להרכב השמור" aria-label="שם להרכב השמור"><button id="lbsave" class="pr">שמור</button></div>
+<div class="svl" id="lbsaved"></div>
+<div class="grid2" style="margin-top:8px"><button id="lbexp">ייצוא קובץ</button><button id="lbimp">ייבוא קובץ</button></div>
+<input type="file" id="lbfile" accept=".json" hidden>
+</details>
+</aside>
+</div>
+</main>
+<dialog id="lbimgdlg"><h3>תמונת ההרכב</h3><div id="lbimgbox"></div><div class="dr"><a id="lbdl" class="pr" download="lineup.png" style="text-decoration:none;display:inline-block;padding:8px 12px;border-radius:9px;background:var(--ac);color:var(--ax);font-weight:700">⬇ הורדה</a><button id="lbshare" hidden>שיתוף</button><button id="lbimgcl" style="margin-inline-start:auto">סגור</button></div></dialog>
+<dialog id="lbpdlg"><h3 id="lbpdh">שחקן</h3>
+<label>שם<input id="lbpn"></label>
+<div class="two"><label>מספר<input id="lbpnum" inputmode="numeric"></label><label>עמדה<select id="lbppos"></select></label></div>
+<label>זמינות<select id="lbpav"></select></label>
+<label>הוראה אישית<textarea class="nt" id="lbpnote" placeholder="למשל: לא לעלות בהתקפה, לצמוד לקשר האחורי שלהם"></textarea></label>
+<div class="dr"><button id="lbpok" class="pr">שמור</button><button id="lbpdel" class="dn">מחק מהסגל</button><button id="lbpcl" style="margin-inline-start:auto">ביטול</button></div></dialog>
 <div id="st" class="toast" role="status"></div>
 <dialog id="dlg"><h3>נתונים וייצוא</h3>
 <textarea id="io" placeholder="כאן יופיע הייצוא, או הדביקו JSON / CSV (league,team,name,number,position) לייבוא"></textarea>
@@ -306,7 +428,7 @@ const endDraw=()=>{if(!dd)return;const d=dd;dd=null;if(Math.hypot(d.x2-d.x1,d.y2
 pitch.addEventListener('pointerup',endDraw);pitch.addEventListener('pointercancel',()=>{dd=null;renderPitch()});
 $('#dtools').onclick=e=>{const b=e.target.closest('[data-tool]');if(!b)return;const k=b.dataset.tool;if(k=='clear'){act(()=>{S.draw=[]})}else{S.tool=k;pitch.style.cursor=k=='move'?'':'crosshair';renderTools()}};
 $('#dtools').oninput=e=>{if(e.target.id=='dcol')S.dcol=e.target.value};
-document.addEventListener('keydown',e=>{const t=e.target.tagName;if(/INPUT|SELECT|TEXTAREA/.test(t))return;
+document.addEventListener('keydown',e=>{const t=e.target.tagName;if(/INPUT|SELECT|TEXTAREA/.test(t)||VIEW=='lineup')return;
  if((e.ctrlKey||e.metaKey)&&e.key=='z'){e.preventDefault();e.shiftKey?redoF():undo()}
  else if((e.ctrlKey||e.metaKey)&&e.key=='y'){e.preventDefault();redoF()}
  else if((e.key=='Delete'||e.key=='Backspace')&&selP()&&selP().on){const p=selP();act(()=>{p.on=0;p.s=-1;S.sel=null})}});
@@ -443,4 +565,371 @@ $('#soff').onclick=stopSync;$('#scl').onclick=()=>$('#sdlg').close();
 /* changing a team restarts the search for the right match */
 ['#home','#away','#league'].forEach(s=>$(s).addEventListener('change',()=>{if(sync.on)setTimeout(startSync,0)}));
 if(sync.on&&sync.key&&!document.body.classList.contains('ro'))setTimeout(()=>{if(!document.body.classList.contains('ro'))startSync()},1500);
+
+/* ===================== Lineup builder: "בניית הרכב" ===================== */
+/* Formations on a vertical pitch: [role code, x, y] in percent. x: 0 = left touchline, 100 = right.
+   y: 0 = opponent goal line (attack is up), 100 = own goal line. */
+const LBF={
+'4-3-3':[['GK',50,93],['RB',86,72],['CB',62,77],['CB',38,77],['LB',14,72],['CM',70,53],['DM',50,60],['CM',30,53],['RW',84,26],['ST',50,18],['LW',16,26]],
+'4-2-3-1':[['GK',50,93],['RB',86,72],['CB',62,77],['CB',38,77],['LB',14,72],['DM',63,59],['DM',37,59],['RW',82,36],['AM',50,39],['LW',18,36],['ST',50,17]],
+'4-4-2':[['GK',50,93],['RB',86,72],['CB',62,77],['CB',38,77],['LB',14,72],['RM',85,48],['CM',62,53],['CM',38,53],['LM',15,48],['ST',62,20],['ST',38,20]],
+'4-1-4-1':[['GK',50,93],['RB',86,72],['CB',62,77],['CB',38,77],['LB',14,72],['DM',50,61],['RM',84,43],['CM',62,46],['CM',38,46],['LM',16,43],['ST',50,18]],
+'4-3-1-2':[['GK',50,93],['RB',86,72],['CB',62,77],['CB',38,77],['LB',14,72],['CM',70,55],['DM',50,60],['CM',30,55],['AM',50,38],['ST',62,19],['ST',38,19]],
+'4-4-1-1':[['GK',50,93],['RB',86,72],['CB',62,77],['CB',38,77],['LB',14,72],['RM',85,50],['CM',62,54],['CM',38,54],['LM',15,50],['CF',50,33],['ST',50,17]],
+'4-5-1':[['GK',50,93],['RB',86,72],['CB',62,77],['CB',38,77],['LB',14,72],['RM',85,45],['CM',67,50],['DM',50,56],['CM',33,50],['LM',15,45],['ST',50,18]],
+'3-5-2':[['GK',50,93],['CB',72,76],['CB',50,79],['CB',28,76],['RWB',88,51],['CM',66,52],['DM',50,59],['CM',34,52],['LWB',12,51],['ST',62,20],['ST',38,20]],
+'3-4-3':[['GK',50,93],['CB',72,76],['CB',50,79],['CB',28,76],['RWB',87,51],['CM',62,55],['CM',38,55],['LWB',13,51],['RW',79,25],['ST',50,18],['LW',21,25]],
+'3-4-2-1':[['GK',50,93],['CB',72,76],['CB',50,79],['CB',28,76],['RWB',87,51],['CM',62,56],['CM',38,56],['LWB',13,51],['AM',65,34],['AM',35,34],['ST',50,17]],
+'5-3-2':[['GK',50,93],['RWB',88,66],['CB',70,76],['CB',50,79],['CB',30,76],['LWB',12,66],['CM',68,51],['DM',50,56],['CM',32,51],['ST',62,20],['ST',38,20]],
+'5-4-1':[['GK',50,93],['RWB',88,66],['CB',70,76],['CB',50,79],['CB',30,76],['LWB',12,66],['RM',82,46],['CM',62,50],['CM',38,50],['LM',18,46],['ST',50,18]]};
+/* role code -> [Hebrew name, position groups that fit it (indexes of POS)] */
+const ROLE={GK:['שוער',[0]],CB:['בלם',[1]],RB:['מגן ימני',[1]],LB:['מגן שמאלי',[1]],RWB:['מגן כנף ימני',[1,2]],LWB:['מגן כנף שמאלי',[1,2]],
+ DM:['קשר אחורי',[2,1]],CM:['קשר מרכזי',[2]],AM:['קשר התקפי',[2,3]],RM:['קשר ימני',[2,3]],LM:['קשר שמאלי',[2,3]],
+ RW:['כנף ימין',[3,2]],LW:['כנף שמאל',[3,2]],CF:['חלוץ שני',[3,2]],ST:['חלוץ',[3]]};
+const AV={ok:['זמין',''],dbt:['בספק','❓'],inj:['פצוע','✚'],sus:['מורחק','🟥'],out:['לא בסגל','⛔']};
+const TAC=[['men','גישה',['הגנתית','מאוזנת','התקפית']],['press','לחץ',['נמוך','בינוני','גבוה']],['line','קו הגנה',['נמוך','בינוני','גבוה']],
+ ['width','רוחב',['צר','מאוזן','רחב']],['tempo','קצב',['איטי','מאוזן','מהיר']],['build','בניית משחק',['קצרה','משולבת','ארוכה']]];
+const SP=[['cap','קפטן ©'],['vc','סגן קפטן'],['pk','פנדלים'],['fk','בעיטות חופשיות'],['ckR','קרנות מימין'],['ckL','קרנות משמאל']];
+
+let VIEW='game';
+const LBK='fts.lb',LBSK='fts.lb.saved';
+let L=null,lbHist=[],lbRedo=[],lbDrag=null,lbDraw=null;
+function lbFresh(id){const c=club(id);
+ const st={v:1,club:id,lg:c.lg,f:'4-3-3',phase:'def',codes:LBF['4-3-3'].map(s=>s[0]),
+  pl:squad(id).map(p=>({id:uid(),n:p.n,num:p.num||'',pos:cp(p.pos),av:'ok',note:''})),
+  xi:Array(11).fill(null),pos:{def:{},att:{}},bench:[],benchMax:9,
+  sp:{cap:'',vc:'',pk:'',fk:'',ckR:'',ckL:''},tac:{men:1,press:1,line:1,width:1,tempo:1,build:1},notes:'',
+  info:{title:'',date:'',time:'',comp:'',venue:'',opp:''},kit:{shirt:c.color,gk:'#1d2b3a'},
+  draw:[],show:{name:'last',code:1},tool:'move',dcol:'#ffd84a',sel:null};
+ lbAutoFill(st);return st}
+function lbLoad(){try{const o=JSON.parse(localStorage.getItem(LBK)||'null');if(o&&o.v==1&&Array.isArray(o.pl))return o}catch(e){}
+ return lbFresh(S.home&&S.home.club||'mta')}
+function lbSave(){try{localStorage.setItem(LBK,JSON.stringify(L))}catch(e){}}
+const lbSnap=()=>JSON.stringify(L);
+function lbAct(fn,keepRender){lbHist.push(lbSnap());if(lbHist.length>80)lbHist.shift();lbRedo=[];fn();lbSave();if(!keepRender)lbRender()}
+function lbUndo(){if(!lbHist.length)return;lbRedo.push(lbSnap());L=JSON.parse(lbHist.pop());lbSave();lbRender()}
+function lbRedoF(){if(!lbRedo.length)return;lbHist.push(lbSnap());L=JSON.parse(lbRedo.pop());lbSave();lbRender()}
+
+/* ---------- domain ---------- */
+const P=id=>L.pl.find(p=>p.id==id);
+const gIdx=p=>POS.indexOf(p.pos);
+const fits=(p,code)=>!!p&&ROLE[code][1].includes(gIdx(p));
+const avail=p=>p.av=='ok'||p.av=='dbt';
+const inXI=id=>L.xi.indexOf(id);
+const onBench=id=>L.bench.includes(id);
+function lastName(n){const w=String(n).trim().split(/\s+/);return w.length>1?w.slice(1).join(' '):w[0]}
+function attShift(code,x,y){
+ if(code=='GK')return[x,y-3];
+ if(/^(RB|LB)$/.test(code))return[x>50?Math.min(93,x+5):Math.max(7,x-5),y-26];
+ if(/WB$/.test(code))return[x>50?Math.min(94,x+3):Math.max(6,x-3),y-24];
+ if(code=='CB')return[x>50?x+4:x<50?x-4:x,y-14];
+ if(code=='DM')return[x,y-12];
+ if(/^(CM|AM|RM|LM)$/.test(code))return[x,y-17];
+ return[x,Math.max(7,y-8)]}
+function slotXY(st,i,ph){ph=ph||st.phase;const o=st.pos[ph]&&st.pos[ph][i];if(o)return[o.x,o.y];
+ const b=LBF[st.f][i];if(ph=='att')return attShift(st.codes[i],b[1],b[2]);return[b[1],b[2]]}
+/* best empty slot for a player: same position group first, then any fitting role, then anything (never GK for an outfield player) */
+function bestSlot(st,p){const g=POS.indexOf(p.pos),free=st.xi.map((v,i)=>v?null:i).filter(i=>i!=null);
+ const gk=free.filter(i=>st.codes[i]=='GK'),of=free.filter(i=>st.codes[i]!='GK');
+ if(g==0)return gk.length?gk[0]:null;
+ return of.find(i=>ROLE[st.codes[i]][1][0]==g)??of.find(i=>ROLE[st.codes[i]][1].includes(g))??of[0]??null}
+function lbAutoFill(st){const used=new Set(st.xi.filter(Boolean).concat(st.bench));
+ const pool=st.pl.filter(p=>!used.has(p.id)&&p.av=='ok').concat(st.pl.filter(p=>!used.has(p.id)&&p.av=='dbt'));
+ /* pass 1: exact primary group; pass 2: any fitting group; pass 3: whoever is left */
+ for(const pass of[1,2,3])st.xi.forEach((v,i)=>{if(v)return;const code=st.codes[i];
+  const p=pool.find(q=>!used.has(q.id)&&(pass==1?ROLE[code][1][0]==POS.indexOf(q.pos):pass==2?ROLE[code][1].includes(POS.indexOf(q.pos)):(code=='GK')==(q.pos==POS[0])));
+  if(p){st.xi[i]=p.id;used.add(p.id)}});
+ if(!st.bench.length){const gkB=pool.find(q=>!used.has(q.id)&&q.pos==POS[0]);if(gkB){st.bench.push(gkB.id);used.add(gkB.id)}
+  /* spread the rest of the bench over defence, midfield and attack */
+  const by=[1,2,3].map(g=>pool.filter(q=>!used.has(q.id)&&POS.indexOf(q.pos)==g));
+  for(let r=0;st.bench.length<st.benchMax&&by.some(a=>a.length);r=(r+1)%3){const q=by[r].shift();if(q&&!used.has(q.id)){st.bench.push(q.id);used.add(q.id)}}}}
+function setFormation(f){lbAct(()=>{const keep=L.xi.map((id,i)=>id&&{id,y:slotXY(L,i,'def')[1]}).filter(Boolean).sort((a,b)=>b.y-a.y);
+ L.f=f;L.codes=LBF[f].map(s=>s[0]);L.pos={def:{},att:{}};L.xi=Array(11).fill(null);L.sel=null;
+ const gk=keep.find(k=>P(k.id)&&P(k.id).pos==POS[0]);if(gk){L.xi[0]=gk.id}
+ for(const k of keep){if(k===gk)continue;const p=P(k.id);if(!p)continue;const s=bestSlot(L,p);if(s!=null)L.xi[s]=p.id;else if(!onBench(p.id))L.bench.push(p.id)}})}
+function putInSlot(id,slot){const was=inXI(id);if(was>=0)L.xi[was]=null;L.bench=L.bench.filter(b=>b!=id);L.xi[slot]=id}
+function lbAddToXI(id){const p=P(id);if(!p)return;
+ let s=L.sel!=null?L.sel:bestSlot(L,p);
+ if(s==null){toast('אין עמדה פנויה – לחצו קודם על עמדה במגרש');return}
+ if(!avail(p))toast(p.n+' מסומן כ'+AV[p.av][0]);
+ lbAct(()=>{putInSlot(id,s);L.sel=null})}
+function lbToBench(id){if(L.bench.length>=L.benchMax&&!onBench(id)){toast('הספסל מלא ('+L.benchMax+')');return}
+ lbAct(()=>{const i=inXI(id);if(i>=0)L.xi[i]=null;if(!onBench(id))L.bench.push(id)})}
+function lbRemove(id){lbAct(()=>{const i=inXI(id);if(i>=0)L.xi[i]=null;L.bench=L.bench.filter(b=>b!=id)})}
+
+/* ---------- checks ---------- */
+function lbChecks(){const out=[],xi=L.xi.map(P).filter(Boolean),n=xi.length;
+ out.push(n==11?['ok','11 שחקנים בהרכב']:['bad','חסרים '+(11-n)+' שחקנים בהרכב']);
+ const gkS=L.codes.indexOf('GK'),gkP=gkS>=0&&P(L.xi[gkS]);
+ out.push(gkP&&gkP.pos==POS[0]?['ok','שוער בשער: '+gkP.n]:gkP?['warn',gkP.n+' בשער אבל רשום כ'+gkP.pos]:['bad','אין שוער בשער']);
+ const unav=xi.concat(L.bench.map(P).filter(Boolean)).filter(p=>!avail(p));
+ if(unav.length)out.push(['bad','לא זמינים בסגל המשחק: '+unav.map(p=>p.n+' ('+AV[p.av][0]+')').join(', ')]);
+ const dbt=xi.filter(p=>p.av=='dbt');if(dbt.length)out.push(['warn','בספק ופותחים: '+dbt.map(p=>p.n).join(', ')]);
+ const oop=L.xi.map((id,i)=>{const p=P(id);return p&&!fits(p,L.codes[i])?p.n+' ב'+ROLE[L.codes[i]][0]:null}).filter(Boolean);
+ if(oop.length)out.push(['warn','מחוץ לעמדה הרגילה: '+oop.join(', ')]);
+ const cap=P(L.sp.cap);out.push(cap&&inXI(cap.id)>=0?['ok','קפטן: '+cap.n]:cap?['warn','הקפטן '+cap.n+' לא בהרכב הפותח']:['warn','לא נבחר קפטן']);
+ out.push(P(L.sp.pk)?['ok','בועט פנדלים: '+P(L.sp.pk).n]:['warn','לא נבחר בועט פנדלים']);
+ if(!L.bench.map(P).some(p=>p&&p.pos==POS[0]))out.push(['warn','אין שוער מחליף בספסל']);
+ out.push(['ok','ספסל: '+L.bench.length+' מתוך '+L.benchMax]);
+ return out}
+
+/* ---------- views ---------- */
+const lbPitch=$('#lbpitch');
+const X=x=>20+x*6.4,Y=y=>20+y*10.1,UX=px=>(px-20)/6.4,UY=py=>(py-20)/10.1;
+function lbPitchBase(){let h='';for(let i=0;i<10;i++)h+=`<rect y="${20+i*101}" x="0" width="680" height="101" fill="${i%2?'#238263':'#1f7a5a'}"/>`;
+ h+=`<rect y="0" width="680" height="20" fill="#1f7a5a"/><rect y="1030" width="680" height="20" fill="#238263"/>`;
+ const bw=379,bh=159,sw=172,sh=53,cx=340;
+ h+=`<g fill="none" stroke="rgba(255,255,255,.78)" stroke-width="3.5"><rect x="20" y="20" width="640" height="1010"/><path d="M20 525H660"/><circle cx="${cx}" cy="525" r="87"/>
+ <rect x="${cx-bw/2}" y="20" width="${bw}" height="${bh}"/><rect x="${cx-sw/2}" y="20" width="${sw}" height="${sh}"/><path d="M${cx-60} ${20+bh}A87 87 0 0 0 ${cx+60} ${20+bh}"/>
+ <rect x="${cx-bw/2}" y="${1030-bh}" width="${bw}" height="${bh}"/><rect x="${cx-sw/2}" y="${1030-sh}" width="${sw}" height="${sh}"/><path d="M${cx-60} ${1030-bh}A87 87 0 0 1 ${cx+60} ${1030-bh}"/>
+ <rect x="${cx-37}" y="6" width="74" height="14"/><rect x="${cx-37}" y="1030" width="74" height="14"/></g>
+ <g fill="#fffd"><circle cx="${cx}" cy="525" r="5"/><circle cx="${cx}" cy="126" r="5"/><circle cx="${cx}" cy="924" r="5"/></g>
+ <text x="666" y="540" font-size="15" font-weight="700" fill="rgba(255,255,255,.35)" text-anchor="end" transform="rotate(-90 666 540)">כיוון התקפה ⬆</text>`;
+ return h}
+function tokenSvg(i,dragXY){const id=L.xi[i],p=P(id),code=L.codes[i],[px,py]=dragXY||slotXY(L,i).map((v,k)=>k?Y(v):X(v)),sel=L.sel===i;
+ if(!p)return`<g class="tok" data-i="${i}" transform="translate(${px.toFixed(1)} ${py.toFixed(1)})" tabindex="0" role="button" aria-label="עמדה ריקה: ${ROLE[code][0]}">${sel?'<circle r="36" fill="none" stroke="#ffd84a" stroke-width="4"/>':''}
+  <circle r="27" fill="rgba(10,24,36,.35)" stroke="#fff" stroke-width="2.5" stroke-dasharray="6 5"/><text y="6" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">${code}</text></g>`;
+ const kit=code=='GK'?L.kit.gk:L.kit.shirt,ink=lum(kit)>.55?'#14212f':'#fff',ok=fits(p,code);
+ const nm=L.show.name=='none'?'':L.show.name=='full'?p.n:lastName(p.n),w=Math.max(56,[...nm].length*8+16);
+ const cap=L.sp.cap==id?'C':L.sp.vc==id?'VC':'';
+ return`<g class="tok" data-i="${i}" transform="translate(${px.toFixed(1)} ${py.toFixed(1)})" tabindex="0" role="button" aria-label="${esc(ROLE[code][0])}: ${esc(p.n)}">${sel?'<circle r="38" fill="none" stroke="#ffd84a" stroke-width="4"/>':''}
+ <circle r="28" fill="${kit}" stroke="#fff" stroke-width="3"/><text y="${p.num?8:6}" text-anchor="middle" font-size="${p.num?22:16}" font-weight="900" fill="${ink}">${esc(p.num||ini(p.n))}</text>
+ ${L.show.code?`<rect x="-20" y="-50" width="40" height="18" rx="9" fill="${ok?'rgba(10,24,36,.75)':'#e08a00'}"/><text y="-36" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">${code}</text>`:''}
+ ${cap?`<circle cx="23" cy="-21" r="12" fill="#f0b429" stroke="#14212f" stroke-width="1.5"/><text x="23" y="${cap=='C'?-16:-17}" text-anchor="middle" font-size="${cap=='C'?14:10}" font-weight="900" fill="#14212f">${cap}</text>`:''}
+ ${p.av!='ok'?`<circle cx="-23" cy="-21" r="11" fill="#fff"/><text x="-23" y="-16" text-anchor="middle" font-size="13">${AV[p.av][1]}</text>`:''}
+ ${p.note?`<circle cx="24" cy="20" r="7" fill="#7dd3fc" stroke="#0a1824" stroke-width="1.5"><title>${esc(p.note)}</title></circle>`:''}
+ ${nm?`<rect x="${-w/2}" y="34" width="${w}" height="22" rx="7" fill="#0a1824" opacity=".86"/><text y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">${esc(nm)}</text>`:''}</g>`}
+function lbRenderPitch(){let h=lbPitchBase();for(const d of L.draw)h+=drawSvg(d);if(lbDraw)h+=drawSvg(lbDraw);
+ for(let i=0;i<11;i++)if(!(lbDrag&&lbDrag.i===i&&lbDrag.moved))h+=tokenSvg(i);
+ if(lbDrag&&lbDrag.moved)h+=tokenSvg(lbDrag.i,[lbDrag.x,lbDrag.y]);
+ lbPitch.innerHTML=h}
+function lbRenderTop(){$('#lbleague').value=L.lg;$('#lbclub').innerHTML=opts(CLUBS.filter(c=>c.lg==L.lg).map(c=>[c.id,c.name]),L.club);
+ $('#lbform').innerHTML=opts(Object.keys(LBF).map(f=>[f,f]),L.f);
+ $('#lbphase').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ph==L.phase)));
+ const T=[['move','✋ הזזה'],['arrow','➜ ריצה'],['line','┅ מסירה'],['zone','▭ אזור']];
+ $('#lbtools').innerHTML=T.map(([k,l])=>`<button data-tool="${k}" class="${L.tool==k?'on':''}">${l}</button>`).join('')+`<input type="color" id="lbdcol" value="${L.dcol}" aria-label="צבע ציור"><button data-tool="clear" class="dn"${L.draw.length?'':' disabled'}>נקה</button>`;
+ lbPitch.style.cursor=L.tool=='move'?'':'crosshair'}
+function lbRenderRoster(){const q=$('#lbq').value.trim().toLowerCase(),pf=$('#lbpf').value;
+ $('#lbrh').textContent='הסגל ('+L.pl.length+')';
+ const rows=L.pl.filter(p=>(!q||p.n.toLowerCase().includes(q)||String(p.num)==q)&&(!pf||p.pos==pf));
+ const kit=L.kit.shirt,ink=lum(kit)>.55?'#14212f':'#fff';
+ $('#lbrl').innerHTML=POS.map(g=>{const r=rows.filter(p=>p.pos==g);if(!r.length)return'';
+  return`<div class="sec">${g}</div>`+r.map(p=>{const xi=inXI(p.id),b=onBench(p.id),k=p.pos==POS[0]?L.kit.gk:kit,ik=lum(k)>.55?'#14212f':'#fff';
+   const st=xi>=0?`<span class="tag">${L.codes[xi]}</span>`:b?`<span class="tag b">ספסל</span>`:'';
+   const bt=xi>=0?`<button data-a="bench" data-id="${p.id}" title="לספסל">⇣</button><button data-a="rm" data-id="${p.id}" title="הוצא">✕</button>`
+    :b?`<button data-a="xi" data-id="${p.id}">＋ הרכב</button><button data-a="rm" data-id="${p.id}" title="הוצא מהספסל">✕</button>`
+    :`<button data-a="xi" data-id="${p.id}">＋ הרכב</button><button data-a="bench" data-id="${p.id}">ספסל</button>`;
+   return`<div class="rr${xi>=0?' inxi':''}${avail(p)?'':' unav'}"><div class="chip" style="background:${k};color:${ik}">${esc(p.num)}</div>
+   <div class="nm" data-a="edit" data-id="${p.id}" title="עריכה">${AV[p.av][1]?AV[p.av][1]+' ':''}${esc(p.n)} ${st}<small>${AV[p.av][0]}${p.note?' · '+esc(p.note):''}</small></div><div class="bt">${bt}</div></div>`}).join('')}).join('')||'<div class="hint">אין שחקנים שמתאימים לחיפוש.</div>'}
+function lbRenderInsp(){const e=$('#lbinsp'),i=L.sel;
+ if(i==null){e.innerHTML='<h3>עמדה נבחרת</h3><div class="hint">לחצו על שחקן או על עמדה ריקה במגרש כדי להחליף שחקן, לשנות את תפקיד העמדה, למנות קפטן או לכתוב הוראה אישית.</div>';return}
+ const code=L.codes[i],p=P(L.xi[i]);
+ const cand=L.pl.filter(q=>q.id!=(p&&p.id)).sort((a,b)=>(fits(b,code)-fits(a,code))||(avail(b)-avail(a))||((inXI(a.id)>=0)-(inXI(b.id)>=0)));
+ const where=q=>inXI(q.id)>=0?' – בהרכב ('+L.codes[inXI(q.id)]+')':onBench(q.id)?' – ספסל':'';
+ e.innerHTML=`<h3>${esc(ROLE[code][0])}${p?' · '+esc(p.n):' · עמדה ריקה'}</h3>
+ <div class="grid2"><label class="fl">תפקיד העמדה<select id="lbicode">${opts(Object.keys(ROLE).map(k=>[k,k+' – '+ROLE[k][0]]),code)}</select></label>
+ <label class="fl">שחקן בעמדה<select id="lbiplayer"><option value="">— ריק —</option>${p?`<option value="${p.id}" selected>${esc(p.num?p.num+' · ':'')}${esc(p.n)}</option>`:''}${cand.map(q=>`<option value="${q.id}">${fits(q,code)?'':'⚠ '}${esc(q.num?q.num+' · ':'')}${esc(q.n)}${where(q)}${avail(q)?'':' ('+AV[q.av][0]+')'}</option>`).join('')}</select></label></div>
+ ${p?`<div class="rolebtns">${SP.map(([k,l])=>`<button data-sp="${k}" class="${L.sp[k]==p.id?'on':''}">${l}</button>`).join('')}</div>
+ <label class="fl">הוראה אישית<textarea class="nt" id="lbinote" placeholder="למשל: לחץ על הבלם השמאלי שלהם, לא לעלות בכדורים נייחים">${esc(p.note||'')}</textarea></label>
+ <div class="rolebtns"><button id="lbiben">⇣ לספסל</button><button id="lbirm">✕ הוצא מההרכב</button><button id="lbireset">↺ מיקום ברירת מחדל</button><button id="lbidone" style="margin-inline-start:auto">סיום</button></div>`
+ :`<div class="hint" style="margin-top:8px">בחרו שחקן מהרשימה, או לחצו "＋ הרכב" ליד שחקן בסגל.</div><div class="rolebtns"><button id="lbidone">סיום</button></div>`}`}
+function lbRenderBench(){$('#lbbc').textContent=L.bench.length+'/'+L.benchMax;
+ $('#lbbench').innerHTML=L.bench.map((id,k)=>{const p=P(id);if(!p)return'';return`<div class="bi"><b>${esc(p.num||'–')}</b><span>${AV[p.av][1]?AV[p.av][1]+' ':''}${esc(p.n)} <small style="color:var(--mu)">${p.pos}</small></span>
+  <span class="bt"><button data-b="up" data-k="${k}" aria-label="הזז למעלה"${k?'':' disabled'}>↑</button><button data-b="xi" data-id="${id}" title="להרכב">＋</button><button data-b="rm" data-id="${id}" aria-label="הוצא">✕</button></span></div>`}).join('')||'<div class="hint">הספסל ריק. הוסיפו מחליפים מהסגל.</div>';
+ $('#lbbmax').innerHTML=opts([5,6,7,8,9,10,11,12,15].map(n=>[n,n+' מחליפים']),L.benchMax)}
+function lbRenderSP(){const squadIds=L.xi.filter(Boolean).concat(L.bench),list=squadIds.map(P).filter(Boolean);
+ $('#lbsp').innerHTML=SP.map(([k,l])=>`<label class="fl">${l}<select data-sp="${k}"><option value="">— לא נבחר —</option>${list.map(p=>`<option value="${p.id}"${L.sp[k]==p.id?' selected':''}>${esc(p.num?p.num+' · ':'')}${esc(p.n)}${onBench(p.id)?' (ספסל)':''}</option>`).join('')}</select></label>`).join('')}
+function lbRenderTac(){$('#lbtac').innerHTML=TAC.map(([k,l,o])=>`<div class="tacrow"><span>${l}</span><div class="seg" role="group" aria-label="${l}">${o.map((x,n)=>`<button data-t="${k}" data-v="${n}" aria-pressed="${L.tac[k]==n}">${x}</button>`).join('')}</div></div>`).join('');
+ if(document.activeElement!==$('#lbnotes'))$('#lbnotes').value=L.notes||''}
+function lbRenderInfo(){const I=L.info,set=(id,v)=>{const el=$(id);if(document.activeElement!==el)el.value=v||''};
+ set('#lbtitle',I.title);set('#lbdate',I.date);set('#lbtime',I.time);set('#lbcomp',I.comp);set('#lbvenue',I.venue);set('#lbopp',I.opp);
+ $('#lbkit').value=L.kit.shirt;$('#lbgk').value=L.kit.gk;$('#lbname').value=L.show.name;$('#lbcode').checked=!!L.show.code}
+function lbRenderChecks(){const c=lbChecks(),bad=c.filter(x=>x[0]=='bad').length,warn=c.filter(x=>x[0]=='warn').length;
+ const ic={ok:'✅',warn:'⚠️',bad:'⛔'};
+ $('#lbchk').innerHTML=c.map(([s,t])=>`<div class="ck"><i>${ic[s]}</i><span>${esc(t)}</span></div>`).join('');
+ $('#lbcc').textContent=bad?bad+' לתיקון':warn?warn+' הערות':'מוכן ✓';
+ const n=L.xi.filter(Boolean).length,cap=P(L.sp.cap);
+ $('#lbsum').innerHTML=`<span class="chipx ${n==11?'ok':'bad'}">${n}/11 בהרכב</span><span class="chipx">${esc(L.f)} · ${L.phase=='def'?'בהגנה':'בהתקפה'}</span><span class="chipx">${L.bench.length} בספסל</span>`+
+  (cap?`<span class="chipx ok">© ${esc(cap.n)}</span>`:'')+`<span class="chipx ${bad?'bad':warn?'warn':'ok'}">${bad?'⛔ '+bad+' לתיקון':warn?'⚠️ '+warn+' הערות':'✅ מוכן'}</span>`}
+const lbGetSaved=()=>{try{return JSON.parse(localStorage.getItem(LBSK)||'[]')}catch(e){return[]}};
+const lbPutSaved=a=>{try{localStorage.setItem(LBSK,JSON.stringify(a))}catch(e){toast('אין מקום לשמירה במכשיר')}};
+function lbRenderSaved(){const a=lbGetSaved();
+ $('#lbsaved').innerHTML=a.length?a.map((s,k)=>`<div class="sv"><span>${esc(s.name)}<small>${esc(s.f||'')} · ${new Date(s.at).toLocaleDateString('he-IL')}</small></span><button data-s="load" data-k="${k}">טען</button><button data-s="dup" data-k="${k}" title="שכפל">⧉</button><button data-s="del" data-k="${k}" class="dn" aria-label="מחק">✕</button></div>`).join('')
+  :'<div class="hint" style="margin-top:6px">עוד אין הרכבים שמורים. תנו שם ולחצו "שמור" – למשל לפני כל משחק.</div>'}
+function lbRender(){if(VIEW!='lineup')return;lbRenderTop();lbRenderPitch();lbRenderRoster();lbRenderInsp();lbRenderBench();lbRenderSP();lbRenderTac();lbRenderInfo();lbRenderChecks();lbRenderSaved();
+ $('#undo').disabled=!lbHist.length;$('#redo').disabled=!lbRedo.length}
+
+/* ---------- events ---------- */
+$('#lbpf').innerHTML='<option value="">כל העמדות</option>'+POS.map(p=>`<option>${p}</option>`).join('');
+$('#lbppos').innerHTML=POS.map(p=>`<option>${p}</option>`).join('');
+$('#lbpav').innerHTML=Object.keys(AV).map(k=>`<option value="${k}">${AV[k][1]?AV[k][1]+' ':''}${AV[k][0]}</option>`).join('');
+/* switching team keeps match details, tactics, formation and display choices; the squad comes from the new club */
+function lbSwitchClub(id){const keep={info:L.info,tac:L.tac,notes:L.notes,benchMax:L.benchMax,show:L.show,phase:L.phase},nf=lbFresh(id);
+ if(L.f!=nf.f){nf.f=L.f;nf.codes=LBF[L.f].map(s=>s[0]);nf.xi=Array(11).fill(null);nf.bench=[];Object.assign(nf,{benchMax:keep.benchMax});lbAutoFill(nf)}
+ L=Object.assign(nf,keep)}
+$('#lbleague').onchange=e=>{const c=CLUBS.find(c=>c.lg==e.target.value);lbAct(()=>lbSwitchClub(c.id))};
+$('#lbclub').onchange=e=>lbAct(()=>lbSwitchClub(e.target.value));
+$('#lbform').onchange=e=>setFormation(e.target.value);
+$('#lbauto').onclick=()=>lbAct(()=>{lbAutoFill(L)});
+$('#lbclear').onclick=()=>lbAct(()=>{L.xi=Array(11).fill(null);L.bench=[];L.sel=null});
+$('#lbreload').onclick=()=>{const fr=lbFresh(L.club);lbAct(()=>{const old=new Map(L.pl.map(p=>[p.n,p]));
+ L.pl=fr.pl.map(p=>old.get(p.n)?Object.assign({},old.get(p.n),{num:p.num,pos:p.pos}):p);const ids=new Set(L.pl.map(p=>p.id));
+ L.xi=L.xi.map(id=>ids.has(id)?id:null);L.bench=L.bench.filter(id=>ids.has(id))});toast('הסגל נטען מחדש')};
+$('#lbphase').onclick=e=>{const b=e.target.closest('button');if(!b)return;L.phase=b.dataset.ph;lbSave();lbRender()};
+$('#lbtools').onclick=e=>{const b=e.target.closest('[data-tool]');if(!b)return;if(b.dataset.tool=='clear')lbAct(()=>{L.draw=[]});else{L.tool=b.dataset.tool;lbSave();lbRenderTop()}};
+$('#lbtools').oninput=e=>{if(e.target.id=='lbdcol'){L.dcol=e.target.value;lbSave()}};
+$('#lbq').oninput=lbRenderRoster;$('#lbpf').onchange=lbRenderRoster;
+$('#lbrl').onclick=e=>{const t=e.target.closest('[data-a]');if(!t)return;const id=t.dataset.id,a=t.dataset.a;
+ if(a=='xi')lbAddToXI(id);else if(a=='bench')lbToBench(id);else if(a=='rm')lbRemove(id);else if(a=='edit')lbEditPlayer(id)};
+/* pitch: select, drag to swap or fine-tune, draw */
+const lbPt=e=>{const m=lbPitch.getScreenCTM().inverse();return new DOMPoint(e.clientX,e.clientY).matrixTransform(m)};
+lbPitch.addEventListener('pointerdown',e=>{const g=e.target.closest('.tok');const c=lbPt(e);
+ if(L.tool!='move'&&!g){const x=Math.round(Math.max(0,Math.min(680,c.x))),y=Math.round(Math.max(0,Math.min(1050,c.y)));lbDraw={t:L.tool,c:L.dcol,x1:x,y1:y,x2:x,y2:y};lbPitch.setPointerCapture(e.pointerId);e.preventDefault();return}
+ if(!g){if(L.sel!=null){L.sel=null;lbSave();lbRenderPitch();lbRenderInsp()}return}const i=+g.dataset.i,[sx,sy]=slotXY(L,i);lbDrag={i,ox:c.x-X(sx),oy:c.y-Y(sy),x:X(sx),y:Y(sy),sx:c.x,sy:c.y,moved:false};lbPitch.setPointerCapture(e.pointerId);e.preventDefault()});
+lbPitch.addEventListener('pointermove',e=>{const c=lbPt(e);
+ if(lbDraw){lbDraw.x2=Math.round(Math.max(0,Math.min(680,c.x)));lbDraw.y2=Math.round(Math.max(0,Math.min(1050,c.y)));lbRenderPitch();return}
+ if(!lbDrag)return;if(!lbDrag.moved&&Math.hypot(c.x-lbDrag.sx,c.y-lbDrag.sy)<7)return;
+ lbDrag.moved=true;lbDrag.x=Math.max(30,Math.min(650,c.x-lbDrag.ox));lbDrag.y=Math.max(30,Math.min(1020,c.y-lbDrag.oy));lbRenderPitch()});
+lbPitch.addEventListener('pointerup',()=>{
+ if(lbDraw){const d=lbDraw;lbDraw=null;if(Math.hypot(d.x2-d.x1,d.y2-d.y1)>20)lbAct(()=>{L.draw.push(d)});else lbRenderPitch();return}
+ if(!lbDrag)return;const d=lbDrag;lbDrag=null;
+ if(!d.moved){L.sel=L.sel===d.i?null:d.i;lbSave();lbRenderPitch();lbRenderInsp();return}
+ /* dropped on another player: swap; otherwise keep the new spot for this shape */
+ let tgt=null,best=48;for(let k=0;k<11;k++){if(k==d.i)continue;const[sx,sy]=slotXY(L,k),dd=Math.hypot(X(sx)-d.x,Y(sy)-d.y);if(dd<best){best=dd;tgt=k}}
+ lbAct(()=>{if(tgt!=null){const a=L.xi[d.i];L.xi[d.i]=L.xi[tgt];L.xi[tgt]=a;L.sel=tgt}
+  else{L.pos[L.phase][d.i]={x:+UX(d.x).toFixed(1),y:+UY(d.y).toFixed(1)};L.sel=d.i}})});
+lbPitch.addEventListener('pointercancel',()=>{lbDrag=null;lbDraw=null;lbRenderPitch()});
+lbPitch.addEventListener('keydown',e=>{const g=e.target.closest&&e.target.closest('.tok');if(g&&(e.key=='Enter'||e.key==' ')){e.preventDefault();L.sel=+g.dataset.i;lbRenderPitch();lbRenderInsp()}});
+/* inspector */
+$('#lbinsp').onchange=e=>{const i=L.sel;if(i==null)return;
+ if(e.target.id=='lbicode')lbAct(()=>{L.codes[i]=e.target.value});
+ if(e.target.id=='lbiplayer'){const v=e.target.value;lbAct(()=>{if(!v){L.xi[i]=null;return}const prev=L.xi[i],was=inXI(v);
+  if(was>=0){L.xi[was]=prev}else{if(prev&&onBench(v))L.bench[L.bench.indexOf(v)]=prev;else L.bench=L.bench.filter(b=>b!=v)}L.xi[i]=v})}};
+$('#lbinsp').oninput=e=>{if(e.target.id=='lbinote'){const p=P(L.xi[L.sel]);if(p){p.note=e.target.value;lbSave();clearTimeout(lbInsp.t);lbInsp.t=setTimeout(()=>{lbRenderPitch();lbRenderRoster()},400)}}};
+const lbInsp={t:0};
+$('#lbinsp').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=L.sel,id=L.xi[i];
+ if(b.dataset.sp){const k=b.dataset.sp;lbAct(()=>{L.sp[k]=L.sp[k]==id?'':id;if(k=='cap'&&L.sp.vc==id)L.sp.vc='';if(k=='vc'&&L.sp.cap==id)L.sp.cap=''});return}
+ if(b.id=='lbiben')lbToBench(id);if(b.id=='lbirm')lbRemove(id);
+ if(b.id=='lbireset')lbAct(()=>{delete L.pos[L.phase][i]});
+ if(b.id=='lbidone'){L.sel=null;lbSave();lbRenderPitch();lbRenderInsp()}};
+/* bench */
+$('#lbbench').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.b=='up'){const k=+b.dataset.k;lbAct(()=>{[L.bench[k-1],L.bench[k]]=[L.bench[k],L.bench[k-1]]})}
+ if(b.dataset.b=='xi')lbAddToXI(b.dataset.id);if(b.dataset.b=='rm')lbRemove(b.dataset.id)};
+$('#lbbmax').onchange=e=>lbAct(()=>{L.benchMax=+e.target.value;L.bench=L.bench.slice(0,L.benchMax)});
+$('#lbsp').onchange=e=>{const k=e.target.dataset.sp;if(k)lbAct(()=>{L.sp[k]=e.target.value;if(k=='cap'&&L.sp.vc==L.sp.cap)L.sp.vc='';if(k=='vc'&&L.sp.cap==L.sp.vc)L.sp.cap=''})};
+$('#lbtac').onclick=e=>{const b=e.target.closest('[data-t]');if(b)lbAct(()=>{L.tac[b.dataset.t]=+b.dataset.v})};
+$('#lbnotes').oninput=e=>{L.notes=e.target.value;lbSave()};
+[['#lbtitle','title'],['#lbdate','date'],['#lbtime','time'],['#lbcomp','comp'],['#lbvenue','venue'],['#lbopp','opp']].forEach(([s,k])=>$(s).addEventListener('input',e=>{L.info[k]=e.target.value;lbSave()}));
+$('#lbkit').oninput=e=>{L.kit.shirt=e.target.value;lbSave();lbRenderPitch();lbRenderRoster()};
+$('#lbgk').oninput=e=>{L.kit.gk=e.target.value;lbSave();lbRenderPitch();lbRenderRoster()};
+$('#lbname').onchange=e=>{L.show.name=e.target.value;lbSave();lbRenderPitch()};
+$('#lbcode').onchange=e=>{L.show.code=e.target.checked?1:0;lbSave();lbRenderPitch()};
+/* player editor */
+let lbEd=null;
+function lbEditPlayer(id){const p=id?P(id):null;lbEd=id||null;
+ $('#lbpdh').textContent=p?'עריכת שחקן':'שחקן חדש';$('#lbpn').value=p?p.n:'';$('#lbpnum').value=p?p.num:'';$('#lbppos').value=p?p.pos:POS[2];
+ $('#lbpav').value=p?p.av:'ok';$('#lbpnote').value=p?p.note||'':'';$('#lbpdel').hidden=!p;$('#lbpdlg').showModal();$('#lbpn').focus()}
+$('#lbaddp').onclick=()=>lbEditPlayer(null);
+$('#lbpcl').onclick=()=>$('#lbpdlg').close();
+$('#lbpok').onclick=()=>{const n=$('#lbpn').value.trim();if(!n){$('#lbpn').focus();return}
+ const v={n,num:$('#lbpnum').value.trim(),pos:$('#lbppos').value,av:$('#lbpav').value,note:$('#lbpnote').value.trim()};
+ lbAct(()=>{if(lbEd)Object.assign(P(lbEd),v);else L.pl.push(Object.assign({id:uid()},v))});$('#lbpdlg').close()};
+$('#lbpdel').onclick=()=>{const id=lbEd;$('#lbpdlg').close();lbAct(()=>{L.pl=L.pl.filter(p=>p.id!=id);const i=inXI(id);if(i>=0)L.xi[i]=null;L.bench=L.bench.filter(b=>b!=id);for(const k in L.sp)if(L.sp[k]==id)L.sp[k]=''});toast('השחקן נמחק – אפשר לבטל עם ↶')};
+/* saved lineups */
+$('#lbsave').onclick=()=>{const name=$('#lbsvname').value.trim()||L.info.title||('הרכב '+club(L.club).name);const a=lbGetSaved();
+ const k=a.findIndex(s=>s.name==name),item={name,at:Date.now(),f:L.f,data:lbSnap()};if(k>=0)a[k]=item;else a.unshift(item);lbPutSaved(a.slice(0,40));
+ $('#lbsvname').value='';lbRenderSaved();toast(k>=0?'ההרכב "'+name+'" עודכן':'ההרכב "'+name+'" נשמר')};
+$('#lbsaved').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;const a=lbGetSaved(),k=+b.dataset.k,s=a[k];if(!s)return;
+ if(b.dataset.s=='load')lbAct(()=>{L=JSON.parse(s.data);L.sel=null}),toast('נטען: '+s.name);
+ if(b.dataset.s=='dup'){a.splice(k+1,0,Object.assign({},s,{name:s.name+' (עותק)',at:Date.now()}));lbPutSaved(a);lbRenderSaved()}
+ if(b.dataset.s=='del'){const del=a.splice(k,1)[0];lbPutSaved(a);lbRenderSaved();toast('נמחק: '+del.name)}};
+function lbDownload(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+$('#lbexp').onclick=()=>lbDownload('הרכב-'+club(L.club).name+'.json',new Blob([lbSnap()],{type:'application/json'}));
+$('#lbimp').onclick=()=>$('#lbfile').click();
+$('#lbfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+ try{const o=JSON.parse(await f.text());if(!o||o.v!=1||!Array.isArray(o.pl)||!Array.isArray(o.xi))throw 0;lbAct(()=>{L=o;L.sel=null});toast('ההרכב יובא')}catch(err){toast('הקובץ לא נראה כמו הרכב מהסטודיו')}};
+/* text for WhatsApp */
+function lbText(){const I=L.info,c=club(L.club),line=[];
+ line.push((I.title||'הרכב פותח')+' – '+c.name);
+ const meta=[I.date&&new Date(I.date).toLocaleDateString('he-IL'),I.time,I.comp,I.opp&&'נגד '+I.opp,I.venue].filter(Boolean).join(' · ');if(meta)line.push(meta);
+ line.push('מערך '+L.f,'');
+ const order=L.xi.map((id,i)=>({p:P(id),i,y:slotXY(L,i,'def')[1],x:slotXY(L,i,'def')[0]})).filter(o=>o.p).sort((a,b)=>b.y-a.y||b.x-a.x);
+ for(const o of order)line.push((o.p.num?o.p.num+'. ':'')+o.p.n+' – '+ROLE[L.codes[o.i]][0]+(L.sp.cap==o.p.id?' ©':''));
+ const b=L.bench.map(P).filter(Boolean);if(b.length)line.push('','ספסל: '+b.map(p=>(p.num?p.num+' ':'')+p.n).join(', '));
+ const sp=SP.filter(([k])=>k!='cap'&&P(L.sp[k])).map(([k,l])=>l+': '+P(L.sp[k]).n);if(sp.length)line.push('',...sp);
+ if(L.notes.trim())line.push('','הנחיות: '+L.notes.trim());
+ return line.join('\n')}
+$('#lbtext').onclick=async()=>{const t=lbText();try{await navigator.clipboard.writeText(t);toast('ההרכב הועתק – אפשר להדביק בוואטסאפ')}
+ catch(e){$('#lbimgbox').innerHTML=`<textarea style="width:100%;height:260px;direction:rtl" readonly>${esc(t)}</textarea>`;$('#lbdl').hidden=true;$('#lbshare').hidden=true;$('#lbimgdlg').showModal();$('#lbimgbox textarea').select()}};
+/* lineup card image */
+function lbCard(){const W=1080,H=1480,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d'),c=club(L.club),I=L.info;
+ x.fillStyle='#0b1622';x.fillRect(0,0,W,H);
+ const kit=L.kit.shirt;x.fillStyle=kit;x.fillRect(0,0,W,10);
+ x.direction='rtl';x.textAlign='right';x.textBaseline='alphabetic';x.fillStyle='#fff';x.font='900 46px Arial';x.fillText(I.title||'הרכב פותח',W-40,80);
+ x.font='700 30px Arial';x.fillStyle='#cfe0ef';x.fillText(c.name+(I.opp?' נגד '+I.opp:''),W-40,124);
+ const meta=[I.date&&new Date(I.date).toLocaleDateString('he-IL'),I.time,I.comp,I.venue].filter(Boolean).join(' · ');
+ x.font='500 24px Arial';x.fillStyle='#93a9be';x.fillText(meta||('מערך '+L.f),W-40,160);
+ x.textAlign='left';x.direction='ltr';x.font='900 40px Arial';x.fillStyle='#f0b429';x.fillText(L.f,40,80);
+ /* pitch */
+ const px=40,py=190,pw=600,ph=Math.round(pw*1010/640),sx=v=>px+v/100*pw,sy=v=>py+v/100*ph;
+ for(let i=0;i<10;i++){x.fillStyle=i%2?'#238263':'#1f7a5a';x.fillRect(px,py+i*ph/10,pw,ph/10+1)}
+ x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=3;x.strokeRect(px,py,pw,ph);x.beginPath();x.moveTo(px,py+ph/2);x.lineTo(px+pw,py+ph/2);x.stroke();
+ x.beginPath();x.arc(px+pw/2,py+ph/2,pw*87/640,0,7);x.stroke();
+ const bw=pw*379/640,bh=ph*159/1010,s6=pw*172/640,h6=ph*53/1010;
+ x.strokeRect(px+(pw-bw)/2,py,bw,bh);x.strokeRect(px+(pw-s6)/2,py,s6,h6);x.strokeRect(px+(pw-bw)/2,py+ph-bh,bw,bh);x.strokeRect(px+(pw-s6)/2,py+ph-h6,s6,h6);
+ const sc=pw/640;
+ for(const d of L.draw){const a=[sx(UX(d.x1)),sy(UY(d.y1)),sx(UX(d.x2)),sy(UY(d.y2))];x.strokeStyle=x.fillStyle=d.c||'#ffd84a';x.lineWidth=5;
+  if(d.t=='zone'){x.globalAlpha=.25;x.fillRect(Math.min(a[0],a[2]),Math.min(a[1],a[3]),Math.abs(a[2]-a[0]),Math.abs(a[3]-a[1]));x.globalAlpha=1;x.setLineDash([12,7]);x.strokeRect(Math.min(a[0],a[2]),Math.min(a[1],a[3]),Math.abs(a[2]-a[0]),Math.abs(a[3]-a[1]));x.setLineDash([]);continue}
+  x.setLineDash(d.t=='line'?[4,12]:[]);x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(a[2],a[3]);x.stroke();x.setLineDash([]);
+  if(d.t=='arrow'){const an=Math.atan2(a[3]-a[1],a[2]-a[0]),Lh=22;x.beginPath();x.moveTo(a[2],a[3]);x.lineTo(a[2]-Lh*Math.cos(an-.5),a[3]-Lh*Math.sin(an-.5));x.lineTo(a[2]-Lh*Math.cos(an+.5),a[3]-Lh*Math.sin(an+.5));x.fill()}}
+ for(let i=0;i<11;i++){const p=P(L.xi[i]);if(!p)continue;const[ux,uy]=slotXY(L,i,'def'),cx=sx(ux),cy=sy(uy),k=L.codes[i]=='GK'?L.kit.gk:kit;
+  x.beginPath();x.arc(cx,cy,27*sc*1.15,0,7);x.fillStyle=k;x.fill();x.lineWidth=3;x.strokeStyle='#fff';x.stroke();
+  x.fillStyle=lum(k)>.55?'#14212f':'#fff';x.font=p.num?'900 24px Arial':'900 18px Arial';x.textAlign='center';x.direction='ltr';x.fillText(p.num||ini(p.n),cx,cy+(p.num?8:6));
+  const nm=lastName(p.n);x.font='700 17px Arial';const tw=x.measureText(nm).width+16;x.fillStyle='rgba(10,24,36,.86)';x.beginPath();x.roundRect(cx-tw/2,cy+36,tw,26,7);x.fill();
+  x.fillStyle='#fff';x.direction='rtl';x.fillText(nm,cx,cy+55);
+  if(L.sp.cap==p.id){x.beginPath();x.arc(cx+24,cy-22,13,0,7);x.fillStyle='#f0b429';x.fill();x.fillStyle='#14212f';x.font='900 15px Arial';x.direction='ltr';x.fillText('C',cx+24,cy-17)}}
+ /* right column */
+ const rx=W-40;let y=230;x.textAlign='right';x.direction='rtl';
+ const head=t=>{x.fillStyle='#f0b429';x.font='800 24px Arial';x.fillText(t,rx,y);y+=12;x.fillStyle='rgba(255,255,255,.15)';x.fillRect(680,y,W-720,2);y+=32};
+ head('הרכב פותח');
+ const order=L.xi.map((id,i)=>({p:P(id),i,y:slotXY(L,i,'def')[1],x:slotXY(L,i,'def')[0]})).filter(o=>o.p).sort((a,b)=>b.y-a.y||b.x-a.x);
+ for(const o of order){x.font='800 22px Arial';x.fillStyle='#fff';x.fillText((o.p.num?o.p.num+'  ':'')+o.p.n+(L.sp.cap==o.p.id?' ©':''),rx,y);
+  x.font='500 16px Arial';x.fillStyle='#93a9be';x.fillText(ROLE[L.codes[o.i]][0],rx,y+20);y+=48}
+ y+=8;const b=L.bench.map(P).filter(Boolean);
+ if(b.length){head('ספסל');x.font='600 19px Arial';x.fillStyle='#dbe7f2';for(const p of b){x.fillText((p.num?p.num+'  ':'')+p.n,rx,y);y+=30;if(y>H-260)break}}
+ const sp=SP.filter(([k])=>k!='cap'&&P(L.sp[k]));if(sp.length&&y<H-200){y+=10;head('מצבים נייחים');x.font='600 18px Arial';for(const[k,l]of sp){x.fillStyle='#93a9be';x.fillText(l+': ',rx,y);const lw=x.measureText(l+': ').width;x.fillStyle='#fff';x.fillText(P(L.sp[k]).n,rx-lw,y);y+=28}}
+ /* tactics strip */
+ let ty=Math.max(py+ph+50,y+40);x.textAlign='right';x.direction='rtl';x.font='800 22px Arial';x.fillStyle='#f0b429';x.fillText('טקטיקה',W-40,ty);ty+=36;
+ let tx=W-40;x.font='600 18px Arial';
+ for(const[k,l,o]of TAC){const t=l+': '+o[L.tac[k]],tw=x.measureText(t).width+28;if(tx-tw<40){tx=W-40;ty+=46}
+  x.fillStyle='rgba(255,255,255,.08)';x.beginPath();x.roundRect(tx-tw,ty-26,tw,36,18);x.fill();x.fillStyle='#e8f0f8';x.fillText(t,tx-14,ty-2);tx-=tw+10}
+ if(L.notes.trim()){ty+=50;x.fillStyle='#cfe0ef';x.font='500 19px Arial';const words=L.notes.trim().split(/\s+/);let ln='';
+  for(const w of words){const t=ln?ln+' '+w:w;if(x.measureText(t).width>W-80){x.fillText(ln,W-40,ty);ty+=28;ln=w;if(ty>H-40)break}else ln=t}if(ty<=H-40)x.fillText(ln,W-40,ty)}
+ x.textAlign='left';x.direction='ltr';x.font='600 16px Arial';x.fillStyle='rgba(255,255,255,.35)';x.fillText('סטודיו טקטיקה',40,H-24);
+ return cv}
+$('#lbimg').onclick=()=>{const cv=lbCard(),url=cv.toDataURL('image/png');
+ $('#lbimgbox').innerHTML=`<p class="hint">במחשב: "הורדה". בטלפון: לחיצה ארוכה על התמונה לשמירה, או "שיתוף".</p><img alt="תמונת ההרכב" src="${url}">`;
+ const dl=$('#lbdl');dl.hidden=false;dl.href=url;dl.download='הרכב-'+club(L.club).name+'.png';
+ const sh=$('#lbshare');sh.hidden=true;
+ cv.toBlob(bl=>{if(!bl)return;const f=new File([bl],'lineup.png',{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){sh.hidden=false;sh.onclick=()=>navigator.share({files:[f],title:L.info.title||'הרכב',text:lbText()}).catch(()=>{})}});
+ $('#lbimgdlg').showModal()};
+$('#lbimgcl').onclick=()=>$('#lbimgdlg').close();
+
+/* ---------- view switching ---------- */
+function setView(v){VIEW=v=='lineup'?'lineup':'game';
+ $('#game').hidden=VIEW!='game';$('#lb').hidden=VIEW!='lineup';$('#data').hidden=VIEW!='game';
+ document.querySelectorAll('.views button').forEach(b=>b.setAttribute('aria-current',b.dataset.view==VIEW?'page':'false'));
+ if(VIEW=='lineup'){if(!L)L=lbLoad();lbRender()}else renderBar()}
+document.querySelector('.views').onclick=e=>{const b=e.target.closest('[data-view]');if(!b)return;
+ const h=b.dataset.view=='lineup'?'#lineup':'#game';if(location.hash!=h)location.hash=h;else setView(b.dataset.view)};
+window.addEventListener('hashchange',()=>setView(location.hash=='#lineup'?'lineup':'game'));
+$('#undo').onclick=()=>VIEW=='lineup'?lbUndo():undo();$('#redo').onclick=()=>VIEW=='lineup'?lbRedoF():redoF();
+document.addEventListener('keydown',e=>{if(VIEW!='lineup'||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+ if((e.ctrlKey||e.metaKey)&&e.key=='z'){e.preventDefault();e.shiftKey?lbRedoF():lbUndo()}
+ else if((e.ctrlKey||e.metaKey)&&e.key=='y'){e.preventDefault();lbRedoF()}
+ else if((e.key=='Delete'||e.key=='Backspace')&&L.sel!=null&&L.xi[L.sel]){e.preventDefault();lbRemove(L.xi[L.sel])}
+ else if(e.key=='Escape'&&L.sel!=null){L.sel=null;lbRenderPitch();lbRenderInsp()}});
+setView(location.hash=='#lineup'?'lineup':'game');
 </script></body></html>
