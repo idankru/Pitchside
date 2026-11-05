@@ -219,7 +219,7 @@ textarea.nt{min-height:90px;resize:vertical;font:inherit;font-size:13px}
 </aside>
 </div>
 </main>
-<dialog id="lbimgdlg"><h3>תמונת ההרכב</h3><div id="lbimgbox"></div><div class="dr"><a id="lbdl" class="pr" download="lineup.png" style="text-decoration:none;display:inline-block;padding:8px 12px;border-radius:9px;background:var(--ac);color:var(--ax);font-weight:700">⬇ הורדה</a><button id="lbshare" hidden>שיתוף</button><button id="lbimgcl" style="margin-inline-start:auto">סגור</button></div></dialog>
+<dialog id="lbimgdlg"><h3>תמונת ההרכב</h3><div id="lbimgbox"></div><div class="dr"><button id="lbdl" class="pr">⬇ הורדה</button><button id="lbshare" hidden>שיתוף</button><button id="lbimgcl" style="margin-inline-start:auto">סגור</button></div></dialog>
 <dialog id="lbpdlg"><h3 id="lbpdh">שחקן</h3>
 <label>שם<input id="lbpn"></label>
 <div class="two"><label>מספר<input id="lbpnum" inputmode="numeric"></label><label>עמדה<select id="lbppos"></select></label></div>
@@ -844,7 +844,9 @@ $('#lbsaved').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;cons
  if(b.dataset.s=='load')lbAct(()=>{L=JSON.parse(s.data);L.sel=null}),toast('נטען: '+s.name);
  if(b.dataset.s=='dup'){a.splice(k+1,0,Object.assign({},s,{name:s.name+' (עותק)',at:Date.now()}));lbPutSaved(a);lbRenderSaved()}
  if(b.dataset.s=='del'){const del=a.splice(k,1)[0];lbPutSaved(a);lbRenderSaved();toast('נמחק: '+del.name)}};
-function lbDownload(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+/* inside claude.ai files go through the viewer's save prompt; on the website a normal download */
+async function lbDownload(name,blob){if(window.claude&&window.claude.use){try{const d=await window.claude.use('downloads');if(d){await d.save({filename:name,data:blob});return}}catch(e){if(e&&e.code=='declined')return;toast('לא ניתן לשמור קובץ מהתצוגה הזאת');return}}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
 $('#lbexp').onclick=()=>lbDownload('הרכב-'+club(L.club).name+'.json',new Blob([lbSnap()],{type:'application/json'}));
 $('#lbimp').onclick=()=>$('#lbfile').click();
 $('#lbfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
@@ -910,7 +912,7 @@ function lbCard(){const W=1080,H=1480,cv=document.createElement('canvas');cv.wid
  return cv}
 $('#lbimg').onclick=()=>{const cv=lbCard(),url=cv.toDataURL('image/png');
  $('#lbimgbox').innerHTML=`<p class="hint">במחשב: "הורדה". בטלפון: לחיצה ארוכה על התמונה לשמירה, או "שיתוף".</p><img alt="תמונת ההרכב" src="${url}">`;
- const dl=$('#lbdl');dl.hidden=false;dl.href=url;dl.download='הרכב-'+club(L.club).name+'.png';
+ const dl=$('#lbdl');dl.hidden=false;dl.onclick=()=>cv.toBlob(bl=>bl&&lbDownload('הרכב-'+club(L.club).name+'.png',bl));
  const sh=$('#lbshare');sh.hidden=true;
  cv.toBlob(bl=>{if(!bl)return;const f=new File([bl],'lineup.png',{type:'image/png'});
   if(navigator.canShare&&navigator.canShare({files:[f]})){sh.hidden=false;sh.onclick=()=>navigator.share({files:[f],title:L.info.title||'הרכב',text:lbText()}).catch(()=>{})}});
